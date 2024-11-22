@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as React from "react";
 
 import { useReducer } from "react";
@@ -85,7 +86,7 @@ export default function FormInput({
                 <FormControl>
                   <Input
                     type={type}
-                    placeholder={placeholder || ""}
+                    placeholder={placeholder}
                     {...f}
                     className={cn(
                       error?.message &&
@@ -137,7 +138,7 @@ export function FormMaskInput({
         <FormLabel>{label}</FormLabel>
         <FormControl>
           <Input
-            placeholder={placeholder || ""}
+            placeholder={placeholder}
             {...registerWithMask(name, masks[mask], {
               required: true,
             })}
@@ -181,15 +182,18 @@ function CurrencyInput({
   const form = useFormContext();
 
   const initialValue = form.getValues(name)
-    ? moneyFormatter.format(form.getValues(name))
+    ? moneyFormatter.format(form.getValues(name) as number)
     : "";
 
-  const [value, setValue] = useReducer((_: any, next: string) => {
+  const [value, setValue] = useReducer((_: unknown, next: string) => {
     const digits = next.replace(/\D/g, "");
     return moneyFormatter.format(Number(digits) / 100);
   }, initialValue);
 
-  function handleChange(realChangeFn: Function, formattedValue: string) {
+  function handleChange(
+    realChangeFn: (value: number) => void,
+    formattedValue: string,
+  ) {
     const digits = formattedValue.replace(/\D/g, "");
     const realValue = Number(digits) / 100;
     realChangeFn(realValue);
