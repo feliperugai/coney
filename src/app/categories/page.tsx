@@ -3,24 +3,15 @@
 import { Loader2, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import useDeleteCategory from "~/hooks/data/categories/useDeleteCategory";
+import { DataTable } from "~/components/ui/data-table";
 import { api } from "~/trpc/react";
+import { columns } from "./_components/columns";
 import CategoryDialog from "./_components/modal";
 
 export default function CategoriesPage() {
   const [categoryId, setCategoryId] = useQueryState("categoryId");
-
   const { data, isLoading } = api.category.getAll.useQuery();
   const selectedCategory = data?.find((cat) => cat.id === categoryId);
-  const { mutate: deleteCategory, isPending } = useDeleteCategory();
 
   if (isLoading) {
     return (
@@ -41,48 +32,11 @@ export default function CategoriesPage() {
       </div>
 
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Cor</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead className="w-[100px]">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.map((category) => (
-              <TableRow
-                key={category.id}
-                className="cursor-pointer"
-                onClick={() => setCategoryId(category.id)}
-              >
-                <TableCell>
-                  <div
-                    className="h-6 w-6 rounded-full"
-                    style={{ backgroundColor: category.color }}
-                  />
-                </TableCell>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteCategory({ id: category.id });
-                    }}
-                  >
-                    {isPending ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      "Excluir"
-                    )}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable
+          onClick={async (category) => void (await setCategoryId(category.id))}
+          columns={columns}
+          data={data}
+        />
       </div>
 
       {categoryId && (
