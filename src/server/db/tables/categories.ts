@@ -1,0 +1,27 @@
+import { type InferInsertModel, type InferSelectModel } from "drizzle-orm";
+import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { z } from "zod";
+
+export const categories = pgTable("category", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: varchar("name", { length: 255 }).notNull(),
+  color: varchar("color", { length: 7 }).notNull(), // Formato #RRGGBB
+});
+
+// Tipos inferidos do Drizzle
+export type Category = InferSelectModel<typeof categories>;
+export type NewCategory = InferInsertModel<typeof categories>;
+
+// Schemas Zod para validação
+export const insertCategorySchema = z.object({
+  name: z.string().min(1).max(255),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+});
+
+export const selectCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  color: z.string(),
+});
