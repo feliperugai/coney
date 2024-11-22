@@ -167,8 +167,8 @@ export default function CategoriesPage() {
   const utils = api.useUtils();
   const { mutate: deleteCategory, isPending: isDeleting } =
     api.category.delete.useMutation({
-      onSuccess: () => {
-        void utils.category.getAll.invalidate();
+      onSuccess: async () => {
+        await utils.category.getAll.invalidate();
         toast({
           title: "Categoria excluída",
           description: "A categoria foi excluída com sucesso.",
