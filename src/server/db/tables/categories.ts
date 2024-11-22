@@ -17,7 +17,7 @@ export type NewCategory = InferInsertModel<typeof categories>;
 // Schemas Zod para validação
 export const insertCategorySchema = z.object({
   name: z.string().min(1).max(255),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  color: z.string(),
 });
 
 export const selectCategorySchema = z.object({
