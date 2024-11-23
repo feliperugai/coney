@@ -31,13 +31,12 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <DataTable
-          onClick={async (category) => void (await setCategoryId(category.id))}
-          columns={columns}
-          data={data}
-        />
-      </div>
+      <DataTable
+        onClick={async (category) => void (await setCategoryId(category.id))}
+        columns={columns}
+        data={data}
+        enableRowSelection
+      />
 
       {categoryId && (
         <CategoryDialog
