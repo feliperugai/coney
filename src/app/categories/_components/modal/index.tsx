@@ -42,39 +42,37 @@ export default function CategoryDialog({
             {initialData ? "Editar Categoria" : "Nova Categoria"}
           </DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormInput
-              name="name"
-              label="Nome"
-              placeholder="Digite o nome da categoria"
-              disabled={isLoading}
-              required
-            />
+        <Form onSubmit={onSubmit} {...form}>
+          <FormInput
+            name="name"
+            label="Nome"
+            placeholder="Digite o nome da categoria"
+            disabled={isLoading}
+            required
+          />
 
-            <FormColorPicker
-              name="color"
-              label="Cor"
-              disabled={isLoading}
-              enabledTabs={{ solid: true }}
-              required
-            />
+          <FormColorPicker
+            name="color"
+            label="Cor"
+            disabled={isLoading}
+            enabledTabs={{ solid: true }}
+            required
+          />
 
-            <div className="flex justify-end space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isLoading}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {initialData ? "Salvar" : "Criar"}
-              </Button>
-            </div>
-          </form>
+          <div className="flex justify-end space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {initialData ? "Salvar" : "Criar"}
+            </Button>
+          </div>
         </Form>
       </DialogContent>
     </Dialog>

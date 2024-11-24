@@ -9,13 +9,43 @@ import {
   type FieldPath,
   type FieldValues,
   FormProvider,
+  type FormProviderProps,
+  type SubmitHandler,
   useFormContext,
 } from "react-hook-form";
 
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
-const Form = FormProvider;
+type FormProps<
+  TFieldValues extends FieldValues,
+  TContext,
+  TTransformedValues extends FieldValues | undefined = undefined,
+> = FormProviderProps<TFieldValues, TContext, TTransformedValues> & {
+  onSubmit: TTransformedValues extends undefined
+    ? SubmitHandler<TFieldValues>
+    : TTransformedValues extends FieldValues
+      ? SubmitHandler<TTransformedValues>
+      : never;
+};
+
+function Form<
+  TFieldValues extends FieldValues,
+  TContext,
+  TTransformedValues extends FieldValues | undefined = undefined,
+>({
+  children,
+  onSubmit,
+  ...props
+}: FormProps<TFieldValues, TContext, TTransformedValues>) {
+  return (
+    <FormProvider {...props}>
+      <form onSubmit={props.handleSubmit(onSubmit)} className="space-y-4">
+        {children}
+      </form>
+    </FormProvider>
+  );
+}
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
