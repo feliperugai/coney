@@ -1,29 +1,28 @@
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
 
-interface CreateCategoryProps {
+interface CreateSubcategoryProps {
   onSuccess?: () => void | Promise<void>;
 }
 
-export function useCreateCategory({ onSuccess }: CreateCategoryProps) {
+export function useCreateSubcategory({ onSuccess }: CreateSubcategoryProps) {
   const utils = api.useUtils();
 
   const {
-    mutate: createCategory,
+    mutate: createSubcategory,
     isPending: isCreating,
     ...mutation
-  } = api.category.create.useMutation({
+  } = api.subcategory.create.useMutation({
     onSuccess: async () => {
-      await utils.category.getAll.invalidate();
+      await utils.subcategory.getAll.invalidate();
 
       if (onSuccess) await onSuccess?.();
-
-      toast.success("Categoria criada");
+      toast.success("Subcategoria criada");
     },
   });
 
   return {
-    createCategory,
+    createSubcategory,
     isCreating,
     ...mutation,
   };

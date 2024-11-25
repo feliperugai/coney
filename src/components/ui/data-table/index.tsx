@@ -102,6 +102,11 @@ export function DataTable<TData, TValue>({
                   onClick={async (e) => {
                     const target = e.target as HTMLElement;
                     const isSelection = target.role === "checkbox";
+                    const isAnchor = target.tagName === "A";
+
+                    if (isAnchor) {
+                      return;
+                    }
 
                     if (onClick && !isSelection) {
                       e.stopPropagation();

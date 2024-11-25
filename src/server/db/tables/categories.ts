@@ -1,14 +1,23 @@
-import { type InferInsertModel, type InferSelectModel } from "drizzle-orm";
+import {
+  relations,
+  type InferInsertModel,
+  type InferSelectModel,
+} from "drizzle-orm";
 import { pgTable, text, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { subcategories } from "./subcategories";
 
 export const categories = pgTable("category", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }).notNull(),
-  color: varchar("color", { length: 7 }).notNull(), // Formato #RRGGBB
+  color: varchar("color", { length: 7 }).notNull(),
 });
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  subcategories: many(subcategories),
+}));
 
 // Tipos inferidos do Drizzle
 export type Category = InferSelectModel<typeof categories>;

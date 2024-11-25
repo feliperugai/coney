@@ -5,25 +5,24 @@ interface UpdateCategoryProps {
   onSuccess?: () => void | Promise<void>;
 }
 
-export function useUpdateCategory({ onSuccess }: UpdateCategoryProps) {
+export function useUpdateSubcategory({ onSuccess }: UpdateCategoryProps) {
   const utils = api.useUtils();
 
   const {
-    mutate: updateCategory,
+    mutate: updateSubcategory,
     isPending: isUpdating,
     ...mutation
-  } = api.category.update.useMutation({
+  } = api.subcategory.update.useMutation({
     onSuccess: async () => {
-      await utils.category.getAll.invalidate();
+      await utils.subcategory.getAll.invalidate();
 
       if (onSuccess) await onSuccess?.();
-
-      toast.success("Categoria atualizada");
+      toast.success("Subcategoria atualizada");
     },
   });
 
   return {
-    updateCategory,
+    updateSubcategory,
     isUpdating,
     ...mutation,
   };
