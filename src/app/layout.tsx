@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
+import AdminPanelLayout from "~/components/layout/menu";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -35,7 +36,9 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children} <Toaster richColors />
+              <AdminPanelLayout>
+                {children} <Toaster richColors />
+              </AdminPanelLayout>
             </ThemeProvider>
           </NuqsAdapter>
         </TRPCReactProvider>
