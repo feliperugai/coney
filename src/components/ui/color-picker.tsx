@@ -39,6 +39,7 @@ export function ColorPicker({
   const solids = [
     "#E2E2E2",
     "#ff75c3",
+    "#b91d73",
     "#ffa647",
     "#ffe83f",
     "#9fff5b",

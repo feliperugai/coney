@@ -11,7 +11,7 @@ export const columns: ColumnDef<Category>[] = [
     cell: function Cell({ row }) {
       return (
         <div
-          className="size-6 rounded-full"
+          className="size-6 rounded-md"
           style={{ background: row.original.color }}
         />
       );
