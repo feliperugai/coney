@@ -59,6 +59,7 @@ export default function UserMenu({ user }: { user: User }) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
+                  {user.image && <AvatarImage src={user.image} alt={name} />}
                   <AvatarFallback className="rounded-lg">{name}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -77,12 +78,12 @@ export default function UserMenu({ user }: { user: User }) {
                 <MoonIcon className="mr-3 hidden h-4 w-4 text-muted-foreground dark:block" />
                 Tema
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+              {/* <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 <Link href="/profile" className="flex items-center">
                   <UserIcon className="mr-3 h-4 w-4 text-muted-foreground" />
                   Perfil
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

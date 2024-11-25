@@ -30,6 +30,11 @@ export default async function AdminPanelLayout({
               href: "/subcategories",
               icon: <Folder className="mr-2 h-4 w-4" />,
             },
+            {
+              label: "Métodos de pagamento",
+              href: "/payment-methods",
+              icon: <Folder className="mr-2 h-4 w-4" />,
+            },
           ],
         },
       ]}

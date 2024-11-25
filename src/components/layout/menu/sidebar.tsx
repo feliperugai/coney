@@ -42,7 +42,7 @@ export default function AppSidebar({ menu, user, ...props }: AppSidebarProps) {
       <Sidebar
         collapsible="icon"
         {...props}
-        className="bg-biotronik flex min-h-screen flex-col"
+        className="flex min-h-screen flex-col"
       >
         <SidebarHeader>
           <AppDropdown apps={data.apps} />

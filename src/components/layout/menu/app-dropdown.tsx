@@ -27,11 +27,11 @@ export default function TeamDropdown({ apps }: TeamDropdownProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton size="lg">
-          <div className="bg-biotronik text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+          <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
             <activeTeam.logo className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="text-biotronik truncate font-semibold">
+            <span className="truncate font-semibold">
               {activeTeam.name}
             </span>
             <span className="truncate text-xs">{activeTeam.country}</span>
@@ -43,7 +43,7 @@ export default function TeamDropdown({ apps }: TeamDropdownProps) {
         <DropdownMenuLabel>Apps</DropdownMenuLabel>
         {apps.map((app) => (
           <DropdownMenuItem key={app.name} onClick={() => setActiveTeam(app)}>
-            <div className="text-biotronik mr-2 flex size-6 items-center justify-center rounded-sm border">
+            <div className="mr-2 flex size-6 items-center justify-center rounded-sm border">
               <app.logo className="size-4" />
             </div>
             {app.name}

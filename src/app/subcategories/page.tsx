@@ -1,9 +1,11 @@
 "use client";
 
+import { type ColumnDef } from "@tanstack/react-table";
 import { Loader2, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
+import { type Subcategory } from "~/server/db/tables/subcategories";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import SubcategoryDialog from "./_components/modal";
