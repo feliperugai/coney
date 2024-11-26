@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
+import { useState } from "react";
+import { FormLogoSearch } from "~/components/brand-api";
 import { Button } from "~/components/ui/button";
 import { FormColorPicker } from "~/components/ui/color-picker";
 import {
@@ -12,6 +14,8 @@ import {
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
 import FormInput from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { FormDropzone } from "~/components/uploadthing";
 import { useCategoryForm, type CategoryFormValues } from "./useForm";
 
 interface CategoryDialogProps {
@@ -25,44 +29,61 @@ export default function CategoryDialog({
   onOpenChange,
   initialData,
 }: CategoryDialogProps) {
-  function closeModal() {
-    onOpenChange(false);
-  }
-
   const { form, onSubmit, isLoading } = useCategoryForm(
-    closeModal,
+    () => onOpenChange(false),
     initialData,
   );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-xl font-semibold">
             {initialData ? "Editar Categoria" : "Nova Categoria"}
           </DialogTitle>
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
-          <FormInput
-            name="name"
-            label="Nome"
-            placeholder="Digite o nome da categoria"
-            disabled={isLoading}
-            required
-          />
+          <div className="flex flex-col gap-6">
+            <div className="flex-1 space-y-6">
+              <div className="flex items-center gap-5">
+                <FormInput
+                  containerClassName="flex-1"
+                  name="name"
+                  label="Nome"
+                  placeholder="Ex: Feira"
+                  disabled={isLoading}
+                  required
+                />
+                <FormLogoSearch querykey="name" imageKey="image" />
+              </div>
 
-          <FormColorPicker
-            name="color"
-            label="Cor"
-            disabled={isLoading}
-            enabledTabs={{ solid: true }}
-            required
-          />
+              <FormInput
+                name="description"
+                label="Descrição"
+                placeholder="Ex: Compra de peixes, frutas e verduras"
+                disabled={isLoading}
+              />
 
-          <div className="flex justify-end space-x-2">
+              <FormColorPicker
+                name="color"
+                label="Cor"
+                disabled={isLoading}
+                enabledTabs={{ solid: true }}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <Label className="mb-2 block">Logo</Label>
+                <FormDropzone name="image" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-end space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >

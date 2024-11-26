@@ -12,7 +12,9 @@ export const subcategories = pgTable("subcategory", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }).notNull(),
-  color: varchar("color", { length: 7 }).notNull(),
+  color: varchar("color", { length: 7 }),
+  description: varchar("description", { length: 255 }),
+  image: varchar("image", { length: 255 }),
   categoryId: varchar("category_id", { length: 255 })
     .notNull()
     .references(() => categories.id),
@@ -34,8 +36,10 @@ export type NewSubcategory = InferInsertModel<typeof subcategories>;
 // Schemas Zod para validação
 export const insertSubcategorySchema = z.object({
   name: z.string().min(1).max(255),
-  color: z.string(),
   categoryId: z.string(),
+  description: z.string().optional().nullable(),
+  color: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
 });
 
 export const updateSubcategorySchema = z.object({

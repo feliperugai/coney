@@ -2,21 +2,18 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import {
+  VisualizationCell,
+  VisualizationHeader,
+} from "~/components/ui/data-table/cells/visualization-cell";
 import useDeleteSubcategory from "~/hooks/data/subcategories/useDeleteSubcategory";
 import { type Subcategory } from "~/server/db/tables/subcategories";
 
 export const columns: ColumnDef<Subcategory>[] = [
   {
     accessorKey: "color",
-    header: "Cor",
-    cell: function Cell({ row }) {
-      return (
-        <div
-          className="size-6 rounded-full"
-          style={{ background: row.original.color }}
-        />
-      );
-    },
+    header: VisualizationHeader,
+    cell: ({ row }) => <VisualizationCell data={row.original} />,
   },
   {
     accessorKey: "name",

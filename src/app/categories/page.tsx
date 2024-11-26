@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
@@ -13,14 +13,6 @@ export default function CategoriesPage() {
   const { data, isLoading } = api.category.getAll.useQuery();
   const selectedCategory = data?.find((cat) => cat.id === categoryId);
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto p-4">
       <div className="mb-6 flex items-center justify-between">
@@ -32,6 +24,7 @@ export default function CategoriesPage() {
       </div>
 
       <DataTable
+        loading={isLoading}
         onClick={async (category) => void (await setCategoryId(category.id))}
         columns={columns}
         data={data}

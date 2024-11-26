@@ -13,7 +13,9 @@ const categoryFormSchema = z.object({
     .string()
     .min(2, { message: "O nome deve ter pelo menos 2 caracteres" })
     .max(50, { message: "O nome deve ter no máximo 50 caracteres" }),
-  color: z.string(),
+  color: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
 });
 
 export type CategoryFormValues = z.infer<typeof categoryFormSchema>;

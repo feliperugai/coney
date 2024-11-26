@@ -5,6 +5,10 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    domains: ["uploadthing.s3.amazonaws.com", "utfs.io"],
+  },
+};
 
 export default config;

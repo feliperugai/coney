@@ -9,8 +9,6 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
-  console.log({ token });
-
   if (!token && request.nextUrl.pathname !== "/api/auth/signin") {
     console.log("redirecting from " + request.nextUrl.pathname);
     const response = NextResponse.redirect(

@@ -1,21 +1,18 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import {
+  VisualizationCell,
+  VisualizationHeader,
+} from "~/components/ui/data-table/cells/visualization-cell";
 import useDeletePaymentMethod from "~/hooks/data/payment-methods/useDeletePaymentMethod";
 import { type PaymentMethod } from "~/server/db/tables/payment-method";
 
 export const columns: ColumnDef<PaymentMethod>[] = [
   {
     accessorKey: "color",
-    header: "Cor",
-    cell: function Cell({ row }) {
-      return (
-        <div
-          className="size-6 rounded-md"
-          style={{ background: row.original.color }}
-        />
-      );
-    },
+    header: VisualizationHeader,
+    cell: ({ row }) => <VisualizationCell data={row.original} />,
   },
   {
     accessorKey: "name",

@@ -25,6 +25,7 @@ import {
 import { Checkbox } from "../checkbox";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { TableSkeleton } from "./row-skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,6 +33,7 @@ interface DataTableProps<TData, TValue> {
   onClick?: (row: TData) => Promise<void> | void;
   enableRowSelection?: boolean;
   hideFilter?: boolean;
+  loading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +41,7 @@ export function DataTable<TData, TValue>({
   data,
   enableRowSelection,
   hideFilter,
+  loading,
   onClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -68,6 +71,8 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const rows = table.getRowModel().rows;
+
   return (
     <div className="space-y-4">
       {!hideFilter && <DataTableToolbar table={table} />}
@@ -92,9 +97,12 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {loading ? (
+              <TableSkeleton />
+            ) : rows.length ? (
+              rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}

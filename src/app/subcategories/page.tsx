@@ -1,11 +1,9 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
-import { type Subcategory } from "~/server/db/tables/subcategories";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import SubcategoryDialog from "./_components/modal";
@@ -14,14 +12,6 @@ export default function SubcategoriesPage() {
   const [subcategoryId, setCategoryId] = useQueryState("subcategoryId");
   const { data, isLoading } = api.subcategory.getAll.useQuery();
   const selected = data?.find((cat) => cat.id === subcategoryId);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto p-4">
@@ -34,8 +24,9 @@ export default function SubcategoriesPage() {
       </div>
 
       <DataTable
+        loading={isLoading}
         onClick={async (category) => void (await setCategoryId(category.id))}
-        columns={columns}
+        columns={columns as any}
         data={data}
         enableRowSelection
       />

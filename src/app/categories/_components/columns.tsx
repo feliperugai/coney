@@ -1,21 +1,18 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import {
+  VisualizationCell,
+  VisualizationHeader,
+} from "~/components/ui/data-table/cells/visualization-cell";
 import useDeleteCategory from "~/hooks/data/categories/useDeleteCategory";
 import { type Category } from "~/server/db/tables/categories";
 
 export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: "color",
-    header: "Cor",
-    cell: function Cell({ row }) {
-      return (
-        <div
-          className="size-6 rounded-md"
-          style={{ background: row.original.color }}
-        />
-      );
-    },
+    header: VisualizationHeader,
+    cell: ({ row }) => <VisualizationCell data={row.original} />,
   },
   {
     accessorKey: "name",

@@ -1,4 +1,4 @@
-import { Folder, Home } from "lucide-react";
+import { Folder, Home, List, ListTree, Wallet } from "lucide-react";
 import { auth } from "~/server/auth";
 import AdminPanelLayoutClient from "./client";
 
@@ -23,17 +23,17 @@ export default async function AdminPanelLayout({
             {
               label: "Categorias",
               href: "/categories",
-              icon: <Folder className="mr-2 h-4 w-4" />,
+              icon: <List className="mr-2 h-4 w-4" />,
             },
             {
               label: "Subcategorias",
               href: "/subcategories",
-              icon: <Folder className="mr-2 h-4 w-4" />,
+              icon: <ListTree className="mr-2 h-4 w-4" />,
             },
             {
               label: "Métodos de pagamento",
               href: "/payment-methods",
-              icon: <Folder className="mr-2 h-4 w-4" />,
+              icon: <Wallet className="mr-2 h-4 w-4" />,
             },
           ],
         },
