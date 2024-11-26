@@ -11,8 +11,9 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
+import { FormImage } from "~/components/ui/form-image";
 import FormInput from "~/components/ui/input";
-import { FormDropzone } from "~/components/uploadthing";
+import { Label } from "~/components/ui/label";
 import { usePaymentMethodForm, type PaymentMethodForm } from "./useForm";
 
 interface PaymentMethodDialogProps {
@@ -37,10 +38,7 @@ export default function PaymentMethodDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        aria-describedby="Novo método de pagamento"
-        className="max-w-2xl"
-      >
+      <DialogContent aria-describedby="Novo método de pagamento">
         <DialogHeader>
           <DialogTitle>
             {initialData
@@ -49,21 +47,19 @@ export default function PaymentMethodDialog({
           </DialogTitle>
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
-          <div className="flex justify-stretch gap-2">
-            <div className="flex-1 space-y-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-6">
+              <div className="mb-[5px] space-y-2">
+                <Label>Imagem</Label>
+                <FormImage name="image" disabled={isLoading} queryKey="name" />
+              </div>
               <FormInput
+                containerClassName="flex-1"
                 name="name"
                 label="Nome"
-                placeholder="Digite o nome do método de pagamento"
+                placeholder="Ex: Feira"
                 disabled={isLoading}
                 required
-              />
-
-              <FormInput
-                name="description"
-                label="Descrição"
-                placeholder="Digite a descrição do método de pagamento"
-                disabled={isLoading}
               />
 
               <FormColorPicker
@@ -71,10 +67,16 @@ export default function PaymentMethodDialog({
                 label="Cor"
                 disabled={isLoading}
                 enabledTabs={{ solid: true }}
-                required
               />
             </div>
-            <FormDropzone name="image" />
+
+            <FormInput
+              type="textarea"
+              name="description"
+              label="Descrição"
+              placeholder="Ex: Compra de peixes, frutas e verduras"
+              disabled={isLoading}
+            />
           </div>
           <div className="flex justify-end space-x-2">
             <Button

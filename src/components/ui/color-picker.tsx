@@ -1,6 +1,6 @@
 import { Paintbrush } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -46,6 +46,23 @@ export function ColorPicker({
     "#70e2ff",
     "#cd93ff",
     "#09203f",
+    "#C0C0C0",
+    "#A0A0A0",
+    "#ff91d8",
+    "#ff5c9e",
+    "#8f1458",
+    "#ff8a1f",
+    "#d4c123",
+    "#8bcf3d",
+    "#4fc3dc",
+    "#7a45c8",
+    "#001f3f",
+    "#5f9ea0",
+    "#ffcc99",
+    "#ffcc66",
+    "#99ccff",
+    "#6699cc",
+    "#cc6699",
   ];
 
   const gradients = [
@@ -79,6 +96,8 @@ export function ColorPicker({
     .filter(([_, enabled]) => enabled)
     .map(([tab]) => tab);
 
+  const [open, setOpen] = useState(false);
+
   // Determine default tab
   const defaultTab = useMemo(() => {
     if (availableTabs.length === 0) return "solid";
@@ -99,7 +118,10 @@ export function ColorPicker({
                 key={s}
                 style={{ background: s }}
                 className="h-6 w-6 cursor-pointer rounded-md active:scale-105"
-                onClick={() => setBackground(s)}
+                onClick={() => {
+                  setBackground(s);
+                  setOpen(false);
+                }}
               />
             ))}
           </div>
@@ -113,20 +135,14 @@ export function ColorPicker({
                   key={s}
                   style={{ background: s }}
                   className="h-6 w-6 cursor-pointer rounded-md active:scale-105"
-                  onClick={() => setBackground(s)}
+                  onClick={() => {
+                    setBackground(s);
+                    setOpen(false);
+                  }}
                 />
               ))}
             </div>
-            <GradientButton background={background}>
-              💡 Get more at{" "}
-              <Link
-                href="https://gradient.page/ui-gradients"
-                className="font-bold hover:underline"
-                target="_blank"
-              >
-                Gradient Page
-              </Link>
-            </GradientButton>
+            <GradientButton background={background} />
           </div>
         );
       case "image":
@@ -138,20 +154,14 @@ export function ColorPicker({
                   key={s}
                   style={{ backgroundImage: s }}
                   className="h-12 w-full cursor-pointer rounded-md bg-cover bg-center active:scale-105"
-                  onClick={() => setBackground(s)}
+                  onClick={() => {
+                    setBackground(s);
+                    setOpen(false);
+                  }}
                 />
               ))}
             </div>
-            <GradientButton background={background}>
-              🎁 Get abstract{" "}
-              <Link
-                href="https://gradient.page/wallpapers"
-                className="font-bold hover:underline"
-                target="_blank"
-              >
-                wallpapers
-              </Link>
-            </GradientButton>
+            <GradientButton background={background} />
           </div>
         );
       default:
@@ -160,7 +170,7 @@ export function ColorPicker({
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -241,22 +251,12 @@ export function ColorPicker({
   );
 }
 
-const GradientButton = ({
-  background,
-  children,
-}: {
-  background: string;
-  children: React.ReactNode;
-}) => {
+const GradientButton = ({ background }: { background: string }) => {
   return (
     <div
       className="relative rounded-md !bg-cover !bg-center p-0.5 transition-all"
       style={{ background }}
-    >
-      <div className="rounded-md bg-popover/80 p-1 text-center text-xs">
-        {children}
-      </div>
-    </div>
+    />
   );
 };
 
@@ -292,21 +292,21 @@ export function FormColorPicker({
         control={form.control}
         name={name}
         disabled={disabled}
-        render={({ field: f, fieldState: { error } }) => {
+        render={({ field }) => {
           return (
-            <FormItem className="flex flex-col gap-1">
+            <FormItem className="mb-3 flex flex-col gap-2">
               {label && (
                 <FormLabel>
                   {label} {required && !readonly && <RequiredInput />}
                 </FormLabel>
               )}
               {readonly ? (
-                <div>{f.value || "-"}</div>
+                <div>{field.value || "-"}</div>
               ) : (
                 <FormControl>
                   <ColorPicker
-                    background={f.value}
-                    setBackground={(background) => f.onChange(background)}
+                    background={field.value}
+                    setBackground={field.onChange}
                     enabledTabs={enabledTabs}
                   />
                 </FormControl>

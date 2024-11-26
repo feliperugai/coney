@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "./form";
 import RequiredInput from "./required-input";
+import { Textarea } from "./textarea";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -43,7 +44,7 @@ interface FieldInputProps {
   description?: string;
   name: string;
   disabled?: boolean;
-  type?: string;
+  type?: React.HTMLInputTypeAttribute | "textarea";
   className?: string;
   containerClassName?: string;
   required?: boolean;
@@ -84,18 +85,33 @@ export default function FormInput({
                 <div>{f.value || "-"}</div>
               ) : (
                 <FormControl>
-                  <Input
-                    type={type}
-                    placeholder={placeholder}
-                    {...f}
-                    className={cn(
-                      error?.message &&
-                        "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
-                      className,
-                    )}
-                    value={f.value?.toString() || ""}
-                    autoFocus={autoFocus}
-                  />
+                  {type === "textarea" ? (
+                    <Textarea
+                      rows={5}
+                      placeholder={placeholder}
+                      {...f}
+                      className={cn(
+                        error?.message &&
+                          "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
+                        className,
+                      )}
+                      value={f.value?.toString() || ""}
+                      autoFocus={autoFocus}
+                    />
+                  ) : (
+                    <Input
+                      type={type}
+                      placeholder={placeholder}
+                      {...f}
+                      className={cn(
+                        error?.message &&
+                          "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
+                        className,
+                      )}
+                      value={f.value?.toString() || ""}
+                      autoFocus={autoFocus}
+                    />
+                  )}
                 </FormControl>
               )}
               {description && <FormDescription>{description}</FormDescription>}

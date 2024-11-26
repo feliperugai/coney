@@ -34,7 +34,7 @@ export default function CategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             {initialData ? "Editar Categoria" : "Nova Categoria"}
@@ -42,31 +42,18 @@ export default function CategoryDialog({
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
           <div className="flex flex-col gap-6">
-            <div className="flex-1 space-y-6">
-              <div className="flex gap-10">
-                <div className="space-y-2">
-                  <Label className="">Imagem</Label>
-                  <FormImage
-                    name="image"
-                    disabled={isLoading}
-                    queryKey="name"
-                  />
-                </div>
-                <FormInput
-                  containerClassName="flex-1"
-                  name="name"
-                  label="Nome"
-                  placeholder="Ex: Feira"
-                  disabled={isLoading}
-                  required
-                />
+            <div className="flex items-center gap-6">
+              <div className="mb-[5px] space-y-2">
+                <Label>Imagem</Label>
+                <FormImage name="image" disabled={isLoading} queryKey="name" />
               </div>
-
               <FormInput
-                name="description"
-                label="Descrição"
-                placeholder="Ex: Compra de peixes, frutas e verduras"
+                containerClassName="flex-1"
+                name="name"
+                label="Nome"
+                placeholder="Ex: Feira"
                 disabled={isLoading}
+                required
               />
 
               <FormColorPicker
@@ -76,6 +63,14 @@ export default function CategoryDialog({
                 enabledTabs={{ solid: true }}
               />
             </div>
+
+            <FormInput
+              type="textarea"
+              name="description"
+              label="Descrição"
+              placeholder="Ex: Compra de peixes, frutas e verduras"
+              disabled={isLoading}
+            />
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">

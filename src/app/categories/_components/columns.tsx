@@ -19,6 +19,10 @@ export const columns: ColumnDef<Category>[] = [
     header: "Nome",
   },
   {
+    accessorKey: "description",
+    header: "Descrição",
+  },
+  {
     accessorKey: "actions",
     header: "Ações",
     cell: function Cell({ row }) {
