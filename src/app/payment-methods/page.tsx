@@ -4,6 +4,7 @@ import { Loader2, Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
+import { UploadButton } from "~/components/uploadthing";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import PaymentMethodDialog from "./_components/modal";
@@ -32,7 +33,18 @@ export default function PaymentMethodsPage() {
           Novo Método de Pagamento
         </Button>
       </div>
-
+      <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
       <DataTable
         onClick={async (paymentMethod) =>
           void (await setPaymentMethodId(paymentMethod.id))

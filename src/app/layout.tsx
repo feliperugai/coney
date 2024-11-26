@@ -3,13 +3,14 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-
-import { useTheme } from "next-themes";
 import { Toaster } from "sonner";
+import { extractRouterConfig } from "uploadthing/server";
+import AdminPanelLayout from "~/components/layout/menu";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
-import AdminPanelLayout from "~/components/layout/menu";
+import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -28,6 +29,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body>
+        <NextSSRPlugin
+          /**
+           * The `extractRouterConfig` will extract **only** the route configs
+           * from the router to prevent additional information from being
+           * leaked to the client. The data passed to the client is the same
+           * as if you were to fetch `/api/uploadthing` directly.
+           */
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
         <TRPCReactProvider>
           <NuqsAdapter>
             <ThemeProvider

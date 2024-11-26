@@ -13,6 +13,7 @@ const config = {
   rules: {
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/recommended-type-checked": "off",
+    "@typescript-eslint/only-throw-errors": "off",
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-explicit-any": "off",
