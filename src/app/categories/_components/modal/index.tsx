@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { Loader2, Search } from "lucide-react";
-import { useState } from "react";
-import { FormLogoSearch } from "~/components/brand-api";
+import { Loader2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { FormColorPicker } from "~/components/ui/color-picker";
 import {
@@ -13,9 +11,9 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
+import { FormImage } from "~/components/ui/form-image";
 import FormInput from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { FormDropzone } from "~/components/uploadthing";
 import { useCategoryForm, type CategoryFormValues } from "./useForm";
 
 interface CategoryDialogProps {
@@ -45,7 +43,15 @@ export default function CategoryDialog({
         <Form onSubmit={onSubmit} {...form}>
           <div className="flex flex-col gap-6">
             <div className="flex-1 space-y-6">
-              <div className="flex items-center gap-5">
+              <div className="flex gap-10">
+                <div className="space-y-2">
+                  <Label className="">Imagem</Label>
+                  <FormImage
+                    name="image"
+                    disabled={isLoading}
+                    queryKey="name"
+                  />
+                </div>
                 <FormInput
                   containerClassName="flex-1"
                   name="name"
@@ -54,7 +60,6 @@ export default function CategoryDialog({
                   disabled={isLoading}
                   required
                 />
-                <FormLogoSearch querykey="name" imageKey="image" />
               </div>
 
               <FormInput
@@ -70,13 +75,6 @@ export default function CategoryDialog({
                 disabled={isLoading}
                 enabledTabs={{ solid: true }}
               />
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <Label className="mb-2 block">Logo</Label>
-                <FormDropzone name="image" />
-              </div>
             </div>
           </div>
 
