@@ -2,16 +2,16 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { categories } from "~/server/db/schema";
 import { insertCategorySchema } from "~/server/db/tables/categories";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const categoryRouter = createTRPCRouter({
-  create: publicProcedure
+  create: protectedProcedure
     .input(insertCategorySchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.insert(categories).values(input).returning();
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -26,7 +26,7 @@ export const categoryRouter = createTRPCRouter({
         .returning();
     }),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db
@@ -35,11 +35,11 @@ export const categoryRouter = createTRPCRouter({
         .returning();
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.select().from(categories);
   }),
 
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const result = await ctx.db

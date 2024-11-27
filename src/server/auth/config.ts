@@ -59,22 +59,21 @@ export const authConfig = {
     verificationTokensTable: verificationTokens,
   }),
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, session }) => {
       if (user) {
         token.user = { ...user };
       }
+
+      if (session) {
+        token.session = { ...session };
+      }
+
       return token;
     },
-    session: ({ session, user, token }) => {
-      if (!user) return session;
-
+    session: ({ session, token }) => {
       return {
         ...session,
-        token,
-        user: {
-          ...session.user,
-          id: user.id,
-        },
+        ...token,
       };
     },
   },
