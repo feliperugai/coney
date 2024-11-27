@@ -1,4 +1,4 @@
-import { Folder, Home, List, ListTree, Wallet } from "lucide-react";
+import { Folder, Home, List, ListTree, UserPlus, Wallet } from "lucide-react";
 import { auth } from "~/server/auth";
 import AdminPanelLayoutClient from "./client";
 
@@ -16,23 +16,33 @@ export default async function AdminPanelLayout({
           groupLabel: "Dashboard",
           menus: [
             {
-              label: "Dashboard",
+              label: "Início",
               href: "/",
               icon: <Home className="mr-2 h-4 w-4" />,
             },
+          ],
+        },
+        {
+          groupLabel: "Cadastros",
+          menus: [
             {
               label: "Categorias",
-              href: "/categories",
+              href: "/categorias",
               icon: <List className="mr-2 h-4 w-4" />,
             },
             {
               label: "Subcategorias",
-              href: "/subcategories",
+              href: "/subcategorias",
               icon: <ListTree className="mr-2 h-4 w-4" />,
             },
             {
-              label: "Métodos de pagamento",
-              href: "/payment-methods",
+              label: "Beneficiários",
+              href: "/beneficiarios",
+              icon: <UserPlus className="mr-2 h-4 w-4" />,
+            },
+            {
+              label: "Meios de pagamento",
+              href: "/meios-de-pagamento",
               icon: <Wallet className="mr-2 h-4 w-4" />,
             },
           ],

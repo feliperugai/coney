@@ -5,6 +5,7 @@ export const createTable = pgTableCreator((name) => `coney_${name}`);
 import { accounts, accountsRelations } from "./tables/accounts";
 import { categories } from "./tables/categories";
 import { paymentMethods } from "./tables/payment-method";
+import { recipientRelations, recipients } from "./tables/recipients";
 import { sessions, sessionsRelations } from "./tables/session";
 import { subcategories, subcategoriesRelations } from "./tables/subcategories";
 import { users, usersRelations } from "./tables/users";
@@ -15,6 +16,8 @@ export {
   accountsRelations,
   categories,
   paymentMethods,
+  recipientRelations,
+  recipients,
   sessions,
   sessionsRelations,
   subcategories,

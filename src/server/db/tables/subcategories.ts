@@ -3,19 +3,17 @@ import {
   type InferInsertModel,
   type InferSelectModel,
 } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { categories, type Category } from "./categories";
 
 export const subcategories = pgTable("subcategory", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   color: varchar("color", { length: 7 }),
   description: varchar("description", { length: 255 }),
   image: varchar("image", { length: 255 }),
-  categoryId: varchar("category_id", { length: 255 })
+  categoryId: uuid("category_id")
     .notNull()
     .references(() => categories.id),
 });

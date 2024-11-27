@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 import { categories, subcategories } from "~/server/db/schema";
 import {
   insertSubcategorySchema,
@@ -49,6 +50,16 @@ export const subcategoryRouter = createTRPCRouter({
       category,
     }));
   }),
+
+  getByCategoryId: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db
+        .select()
+        .from(subcategories)
+        .where(eq(subcategories.categoryId, input));
+      return result;
+    }),
 
   getById: publicProcedure
     .input(selectSubcategorySchema)

@@ -5,48 +5,50 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCreateCategory } from "~/hooks/data/categories/useCreateCategory";
-import { useUpdateCategory } from "~/hooks/data/categories/useUpdateCategory";
+import { useCreateRecipient } from "~/hooks/data/recipients/useCreateRecipient";
+import { useUpdateRecipient } from "~/hooks/data/recipients/useUpdateRecipient";
 
-const categoryFormSchema = z.object({
+const recipientFormSchema = z.object({
   name: z
     .string()
     .min(2, { message: "O nome deve ter pelo menos 2 caracteres" })
     .max(50, { message: "O nome deve ter no máximo 50 caracteres" }),
   color: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
+  categoryId: z.string().uuid(),
+  subcategoryId: z.string().uuid(),
   image: z.string().optional().nullable(),
 });
 
-export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
+export type RecipientFormValues = z.infer<typeof recipientFormSchema>;
 
-export function useCategoryForm(
+export function useRecipientForm(
   closeModal: () => void,
-  initialData?: { id: string } & CategoryFormValues,
+  initialData?: { id: string } & RecipientFormValues,
 ) {
-  const { createCategory, isCreating } = useCreateCategory({
+  const { createRecipient, isCreating } = useCreateRecipient({
     onSuccess: closeModal,
   });
 
-  const { updateCategory, isUpdating } = useUpdateCategory({
+  const { updateRecipient, isUpdating } = useUpdateRecipient({
     onSuccess: closeModal,
   });
 
   const isLoading = isCreating || isUpdating;
 
-  function onSubmit(data: CategoryFormValues) {
+  function onSubmit(data: RecipientFormValues) {
     if (initialData) {
-      updateCategory({
+      updateRecipient({
         id: initialData.id,
-        data,
+        ...data,
       });
     } else {
-      createCategory(data);
+      createRecipient(data);
     }
   }
 
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(categoryFormSchema),
+  const form = useForm<RecipientFormValues>({
+    resolver: zodResolver(recipientFormSchema),
     defaultValues: initialData ?? {
       name: "",
       color: "#000000",

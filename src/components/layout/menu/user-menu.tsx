@@ -6,6 +6,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { type User } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,6 @@ import {
 } from "~/components/ui/sidebar";
 
 export default function UserMenu({ user }: { user: User }) {
-  const router = useRouter();
   const name = user.name!;
   const { setTheme, theme } = useTheme();
 
@@ -79,7 +79,7 @@ export default function UserMenu({ user }: { user: User }) {
                 Tema
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                <Link href="/profile" className="flex items-center">
+                <Link href="/perfil" className="flex items-center">
                   <UserIcon className="mr-3 h-4 w-4 text-muted-foreground" />
                   Perfil
                 </Link>
@@ -89,8 +89,7 @@ export default function UserMenu({ user }: { user: User }) {
             <DropdownMenuItem
               className="hover:cursor-pointer"
               onClick={async () => {
-                // await signOut();
-                router.replace("/auth/login");
+                await signOut();
               }}
             >
               <LogOut className="mr-3 h-4 w-4 text-muted-foreground" />

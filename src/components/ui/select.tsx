@@ -18,6 +18,7 @@ import {
 import { unknown } from "zod";
 import { cn } from "~/lib/utils";
 import RequiredInput from "./required-input";
+import { Spinner } from "./spinner";
 
 const Select = SelectPrimitive.Root;
 
@@ -231,7 +232,11 @@ export function FormSelect({
                       "border-destructive focus:border-none focus:ring-destructive",
                   )}
                 >
-                  {field.value ? (
+                  {loading ? (
+                    <div className="flex items-center">
+                      <Spinner />
+                    </div>
+                  ) : field.value ? (
                     <SelectValue placeholder={placeholderText} />
                   ) : (
                     <span className="opacity-70">{placeholderText}</span>

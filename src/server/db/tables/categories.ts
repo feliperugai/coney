@@ -3,14 +3,13 @@ import {
   type InferInsertModel,
   type InferSelectModel,
 } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { recipients } from "./recipients";
 import { subcategories } from "./subcategories";
 
 export const categories = pgTable("category", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   color: varchar("color", { length: 7 }),
   description: varchar("description", { length: 255 }),
@@ -19,6 +18,7 @@ export const categories = pgTable("category", {
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
   subcategories: many(subcategories),
+  recipients: many(recipients),
 }));
 
 // Tipos inferidos do Drizzle
