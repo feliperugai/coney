@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
-import AppDropdown from "./app-dropdown";
+import AppDropdown from "./app-logo";
 import NavigationMenu from "./navigation-menu";
 import UserMenu from "./user-menu";
 
@@ -45,7 +45,7 @@ export default function AppSidebar({ menu, user, ...props }: AppSidebarProps) {
         className="flex min-h-screen flex-col"
       >
         <SidebarHeader>
-          <AppDropdown apps={data.apps} />
+          <AppDropdown  />
         </SidebarHeader>
         <div className="flex-1 overflow-auto">
           <SidebarContent>

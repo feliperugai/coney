@@ -14,15 +14,6 @@ body {
 
 @layer base {
   :root {
-    --biotronik-blue: 213 100% 15%;
-    --biotronik-blue-gray: 210 25% 46%;
-    --biotronik-tangerine: 17 90% 54%;
-    --biotronik-gray: 210 3% 57%;
-    --biotronik-light-blue: 208 38% 94%;
-    --biotronik-light-gray: 0 0% 95%;
-    --biotronik-white: 0 0% 100%;
-    --biotronik-black: 0 0% 0%;
-
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 99%;
@@ -56,15 +47,6 @@ body {
   }
 
   .dark {
-    --biotronik-blue: 17 100% 65%;
-    --biotronik-blue-gray: 210 15% 70%;
-    --biotronik-tangerine: 17 100% 65%;
-    --biotronik-gray: 0 0% 70%;
-    --biotronik-light-blue: 210 10% 20%;
-    --biotronik-light-gray: 210 5% 30%;
-    --biotronik-white: 0 0% 98%;
-    --biotronik-black: 0 0% 10%;
-
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --success: 144 46% 40%;
