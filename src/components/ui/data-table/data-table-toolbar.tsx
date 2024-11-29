@@ -6,10 +6,12 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  onDelete?: (selectedRows: TData[]) => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  onDelete,
 }: DataTableToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between">
@@ -19,7 +21,7 @@ export function DataTableToolbar<TData>({
         onChange={(event) => table.setGlobalFilter(event.target.value)}
         className="w-[150px] lg:w-[250px]"
       />
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} onDelete={onDelete} />
     </div>
   );
 }

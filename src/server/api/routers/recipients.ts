@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { recipients } from "~/server/db/schema";
@@ -8,7 +8,6 @@ import {
 } from "~/server/db/tables/recipients";
 
 export const recipientRouter = createTRPCRouter({
-  // Criar um novo recipient
   create: protectedProcedure
     .input(createRecipientSchema)
     .mutation(async ({ ctx, input }) => {
@@ -22,7 +21,6 @@ export const recipientRouter = createTRPCRouter({
         .returning();
     }),
 
-  // Atualizar um recipient existente
   update: protectedProcedure
     .input(updateRecipientSchema)
     .mutation(async ({ ctx, input }) => {
@@ -36,14 +34,21 @@ export const recipientRouter = createTRPCRouter({
         .returning();
     }),
 
-  // Deletar um recipient
   delete: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.delete(recipients).where(eq(recipients.id, input.id));
     }),
 
-  // Buscar todos os recipients
+  deleteMany: protectedProcedure
+    .input(z.object({ ids: z.array(z.string().uuid()) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .delete(recipients)
+        .where(inArray(recipients.id, input.ids))
+        .returning();
+    }),
+
   getAll: protectedProcedure
     .input(
       z
@@ -65,7 +70,6 @@ export const recipientRouter = createTRPCRouter({
       });
     }),
 
-  // Buscar um recipient por ID
   getById: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ ctx, input }) => {

@@ -27,7 +27,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "focus-visible:ring-primary flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         ref={ref}
@@ -143,6 +143,8 @@ export function FormMaskInput({
   mask,
   name,
   className,
+  required,
+  readonly = false,
   containerClassName,
 }: FormMaskInputProps) {
   const form = useFormContext();
@@ -151,7 +153,9 @@ export function FormMaskInput({
   return (
     <div className={cn("mb-3 space-y-2", containerClassName)}>
       <FormItem>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel>
+          {label} {required && !readonly && <RequiredInput />}
+        </FormLabel>
         <FormControl>
           <Input
             placeholder={placeholder}
@@ -174,17 +178,21 @@ type CurrencyInputProps = {
   label?: string;
   disabled?: boolean;
   placeholder: string;
+  readonly?: boolean;
+  required?: boolean;
   locale?: Intl.LocalesArgument;
   currency?: "BRL" | "USD" | "EUR";
 };
 
-function CurrencyInput({
+function FormCurrencyInput({
   name,
   label,
   placeholder,
   disabled,
   locale = "pt-br",
   currency = "BRL",
+  required,
+  readonly = false,
 }: CurrencyInputProps) {
   const moneyFormatter = new Intl.NumberFormat(locale, {
     currency,
@@ -196,45 +204,39 @@ function CurrencyInput({
   });
 
   const form = useFormContext();
-
-  const initialValue = form.getValues(name)
-    ? moneyFormatter.format(form.getValues(name) as number)
+  const formValue = form.getValues(name);
+  const initialValue = formValue
+    ? moneyFormatter.format(parseFloat(formValue))
     : "";
 
-  const [value, setValue] = useReducer((_: unknown, next: string) => {
-    const digits = next.replace(/\D/g, "");
-    return moneyFormatter.format(Number(digits) / 100);
-  }, initialValue);
+  const [value, setValue] = React.useState(initialValue);
 
-  function handleChange(
-    realChangeFn: (value: number) => void,
-    formattedValue: string,
-  ) {
-    const digits = formattedValue.replace(/\D/g, "");
-    const realValue = Number(digits) / 100;
-    realChangeFn(realValue);
-  }
-
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
   return (
     <FormField
       control={form.control}
       disabled={disabled}
       name={name}
       render={({ field, fieldState: { error } }) => {
-        field.value = value;
-        const _change = field.onChange;
-
         return (
           <FormItem>
-            {label && <FormLabel>{label}</FormLabel>}
+            {label && (
+              <FormLabel>
+                {label} {required && !readonly && <RequiredInput />}
+              </FormLabel>
+            )}
             <FormControl>
               <Input
                 placeholder={placeholder}
                 type="text"
                 {...field}
                 onChange={(ev) => {
-                  setValue(ev.target.value);
-                  handleChange(_change, ev.target.value);
+                  const digits = ev.target.value.replace(/\D/g, "");
+                  const formatted = moneyFormatter.format(Number(digits) / 100);
+                  setValue(formatted);
+                  field.onChange(Number(digits) / 100); //
                 }}
                 className={cn(
                   error?.message &&
@@ -251,4 +253,4 @@ function CurrencyInput({
   );
 }
 
-export { CurrencyInput, Input };
+export { FormCurrencyInput, Input };

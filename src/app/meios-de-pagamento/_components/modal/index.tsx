@@ -38,7 +38,7 @@ export default function PaymentMethodDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent aria-describedby="Novo método de pagamento">
+      <DialogContent aria-describedby="Novo">
         <DialogHeader>
           <DialogTitle>
             {initialData

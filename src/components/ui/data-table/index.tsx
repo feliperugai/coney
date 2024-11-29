@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data?: TData[];
   onClick?: (row: TData) => Promise<void> | void;
+  onDelete?: (selectedRows: TData[]) => void;
   enableRowSelection?: boolean;
   hideFilter?: boolean;
   loading?: boolean;
@@ -42,6 +43,7 @@ export function DataTable<TData, TValue>({
   enableRowSelection,
   hideFilter,
   loading,
+  onDelete,
   onClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -75,7 +77,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      {!hideFilter && <DataTableToolbar table={table} />}
+      {!hideFilter && <DataTableToolbar table={table} onDelete={onDelete} />}
 
       <div className="rounded-md border">
         <Table>
@@ -109,8 +111,13 @@ export function DataTable<TData, TValue>({
                   className="cursor-pointer"
                   onClick={async (e) => {
                     const target = e.target as HTMLElement;
+                    // Ignorar clique em botões, links e componentes interativos
+                    if (target.closest("button") || target.closest("a")) {
+                      return;
+                    }
                     const isSelection = target.role === "checkbox";
-                    const isAnchor = target.tagName === "A";
+                    const isAnchor =
+                      target.tagName === "A" || target.tagName === "BUTTON";
 
                     if (isAnchor) {
                       return;

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { categories, subcategories } from "~/server/db/schema";
 import {
@@ -34,16 +34,23 @@ export const subcategoryRouter = createTRPCRouter({
         .returning();
     }),
 
+  deleteMany: protectedProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .delete(subcategories)
+        .where(inArray(subcategories.id, input.ids))
+        .returning();
+    }),
+
   getAll: publicProcedure.query(async ({ ctx }) => {
     const result = await ctx.db
       .select({
         subcategory: subcategories,
-        category: categories, // Define os campos que deseja retornar
+        category: categories,
       })
       .from(subcategories)
-      .leftJoin(categories, eq(subcategories.categoryId, categories.id)); // Faz a junção com categorias
-
-    // O resultado pode vir em um formato de array de objetos, você pode ajustar conforme necessário
+      .leftJoin(categories, eq(subcategories.categoryId, categories.id));
 
     return result.map(({ subcategory, category }) => ({
       ...subcategory,

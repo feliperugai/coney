@@ -1,4 +1,11 @@
-import { Folder, Home, List, ListTree, UserPlus, Wallet } from "lucide-react";
+import {
+  CircleDollarSign,
+  Home,
+  List,
+  ListTree,
+  UserPlus,
+  Wallet,
+} from "lucide-react";
 import { auth } from "~/server/auth";
 import AdminPanelLayoutClient from "./client";
 
@@ -44,6 +51,11 @@ export default async function AdminPanelLayout({
               label: "Meios de pagamento",
               href: "/meios-de-pagamento",
               icon: <Wallet className="mr-2 h-4 w-4" />,
+            },
+            {
+              label: "Renda",
+              href: "/renda",
+              icon: <CircleDollarSign className="mr-2 h-4 w-4" />,
             },
           ],
         },

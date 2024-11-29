@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
+import useDeleteSubcategory from "~/hooks/data/subcategories/useDeleteSubcategory";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import SubcategoryDialog from "./_components/modal";
@@ -11,6 +12,7 @@ import SubcategoryDialog from "./_components/modal";
 export default function SubcategoriesPage() {
   const [subcategoryId, setCategoryId] = useQueryState("subcategoryId");
   const { data, isLoading } = api.subcategory.getAll.useQuery();
+  const { mutate } = useDeleteSubcategory();
   const selected = data?.find((cat) => cat.id === subcategoryId);
 
   return (
@@ -25,6 +27,9 @@ export default function SubcategoriesPage() {
 
       <DataTable
         loading={isLoading}
+        onDelete={(rows) => {
+          mutate({ ids: rows.map((row) => row.id) });
+        }}
         onClick={async (category) => void (await setCategoryId(category.id))}
         columns={columns as any}
         data={data}

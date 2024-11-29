@@ -59,7 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
-    const content = loading ? <Spinner className="mx-2 h-6 w-6" /> : children;
+    const content = loading ? <Spinner className="size-4" /> : children;
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

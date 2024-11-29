@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { accountsRouter } from "./routers/accounts";
 import { categoryRouter } from "./routers/category";
+import { incomeRouter } from "./routers/incomes";
 import { paymentMethodRouter } from "./routers/payment-method";
 import { recipientRouter } from "./routers/recipients";
 import { subcategoryRouter } from "./routers/subcategory";
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   accounts: accountsRouter,
   user: userRouter,
   recipient: recipientRouter,
+  income: incomeRouter,
 });
 
 // export type definition of API

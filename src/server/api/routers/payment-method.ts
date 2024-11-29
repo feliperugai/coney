@@ -1,11 +1,12 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
+import { z } from "zod";
 import { paymentMethods } from "~/server/db/schema";
 import {
   insertPaymentMethodSchema,
   selectPaymentMethodSchema,
   updatePaymentMethodSchema,
 } from "~/server/db/tables/payment-method";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const paymentMethodRouter = createTRPCRouter({
   create: protectedProcedure
@@ -14,7 +15,7 @@ export const paymentMethodRouter = createTRPCRouter({
       return ctx.db.insert(paymentMethods).values(input).returning();
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(updatePaymentMethodSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db
@@ -24,7 +25,7 @@ export const paymentMethodRouter = createTRPCRouter({
         .returning();
     }),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(selectPaymentMethodSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db
@@ -33,7 +34,16 @@ export const paymentMethodRouter = createTRPCRouter({
         .returning();
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  deleteMany: protectedProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .delete(paymentMethods)
+        .where(inArray(paymentMethods.id, input.ids))
+        .returning();
+    }),
+
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     const result = await ctx.db
       .select({
         paymentMethod: paymentMethods,
@@ -43,7 +53,7 @@ export const paymentMethodRouter = createTRPCRouter({
     return result.map(({ paymentMethod }) => paymentMethod);
   }),
 
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(selectPaymentMethodSchema)
     .query(async ({ ctx, input }) => {
       const result = await ctx.db

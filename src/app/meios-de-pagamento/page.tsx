@@ -21,7 +21,7 @@ export default function PaymentMethodsPage() {
         <h1 className="text-2xl font-bold">Métodos de pagamento</h1>
         <Button onClick={() => setPaymentMethodId("new")}>
           <Plus className="mr-2 h-4 w-4" />
-          Novo Método de Pagamento
+          Novo
         </Button>
       </div>
       <DataTable

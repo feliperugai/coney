@@ -7,7 +7,18 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["uploadthing.s3.amazonaws.com", "utfs.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "uploadthing.s3.amazonaws.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "**",
+      },
+    ],
   },
 };
 

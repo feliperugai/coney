@@ -7,10 +7,12 @@ import { DataTable } from "~/components/ui/data-table";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import RecipientDialog from "./_components/modal";
+import useDeleteRecipient from "~/hooks/data/recipients/useDeleteRecipient";
 
 export default function RecipientsPage() {
   const [recipientId, setRecipientId] = useQueryState("recipientId");
   const { data, isLoading } = api.recipient.getAll.useQuery();
+  const { mutate } = useDeleteRecipient();
   const selectedRecipient = data?.find((cat) => cat.id === recipientId);
 
   return (
@@ -25,6 +27,9 @@ export default function RecipientsPage() {
 
       <DataTable
         loading={isLoading}
+        onDelete={(rows) => {
+          mutate({ ids: rows.map((row) => row.id!) });
+        }}
         onClick={async (recipient) => {
           if (recipient.id) await setRecipientId(recipient.id);
         }}
