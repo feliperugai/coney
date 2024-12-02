@@ -30,6 +30,16 @@ export default async function AdminPanelLayout({
           ],
         },
         {
+          groupLabel: "Despesas",
+          menus: [
+            {
+              label: "Despesas variáveis",
+              href: "/despesas-variaveis",
+              icon: <List className="mr-2 h-4 w-4" />,
+            },
+          ],
+        },
+        {
           groupLabel: "Cadastros",
           menus: [
             {

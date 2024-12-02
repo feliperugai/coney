@@ -16,7 +16,7 @@ export default function IncomesPage() {
   const { mutate } = useDeleteIncome();
 
   const selectedIncome = data?.find((p) => p.id === incomeId);
-  console.log(selectedIncome);
+
   return (
     <div className="container mx-auto p-4">
       <div className="mb-6 flex items-center justify-between">

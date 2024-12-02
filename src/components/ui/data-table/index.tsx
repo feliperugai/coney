@@ -12,7 +12,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Table,
@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Checkbox } from "../checkbox";
+import { CheckboxCell } from "./cells/checkbox-cell";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { TableSkeleton } from "./row-skeleton";
@@ -39,7 +39,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  data: initialData = [],
   enableRowSelection,
   hideFilter,
   loading,
@@ -50,9 +50,16 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [data, setData] = useState<TData[]>([]);
+  const [originalData, setOriginalData] = useState<TData[]>([]);
+  const [editedRows, setEditedRows] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (initialData.length) setData(initialData);
+  }, [initialData]);
 
   const table = useReactTable({
-    data: data ?? [],
+    data,
     columns: enableRowSelection
       ? [CheckboxCell as ColumnDef<TData>, ...columns]
       : columns,
@@ -70,6 +77,42 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
+    },
+    meta: {
+      editedRows,
+      setEditedRows,
+      revertData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setData((old: TData[]) =>
+            old.map((row, index) => {
+              if (index !== rowIndex) return row;
+              if (originalData[rowIndex]) return originalData[rowIndex];
+              return row;
+            }),
+          );
+        } else {
+          setOriginalData((old) =>
+            old.map((row, index) => {
+              if (index !== rowIndex) return row;
+              if (data[rowIndex]) return data[rowIndex];
+              return row;
+            }),
+          );
+        }
+      },
+      updateData: (rowIndex: number, columnId: string, value: string) => {
+        setData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex && old[rowIndex]) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              };
+            }
+            return row;
+          }),
+        );
+      },
     },
   });
 
@@ -111,7 +154,7 @@ export function DataTable<TData, TValue>({
                   className="cursor-pointer"
                   onClick={async (e) => {
                     const target = e.target as HTMLElement;
-                    // Ignorar clique em botões, links e componentes interativos
+
                     if (target.closest("button") || target.closest("a")) {
                       return;
                     }
@@ -157,28 +200,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CheckboxCell: ColumnDef<any, any> = {
-  id: "select",
-  header: ({ table }) => (
-    <Checkbox
-      checked={
-        table.getIsAllPageRowsSelected() ||
-        (table.getIsSomePageRowsSelected() && "indeterminate")
-      }
-      onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-      aria-label="Select all"
-    />
-  ),
-  cell: ({ row }) => (
-    <Checkbox
-      name="row-selection"
-      checked={row.getIsSelected()}
-      onCheckedChange={(value) => row.toggleSelected(!!value)}
-      aria-label="Select row"
-    />
-  ),
-  enableSorting: false,
-  enableHiding: false,
-};
