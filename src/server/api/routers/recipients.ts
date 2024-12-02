@@ -63,6 +63,7 @@ export const recipientRouter = createTRPCRouter({
       return ctx.db.query.recipients.findMany({
         limit,
         offset,
+
         with: {
           category: true,
           subcategory: true,

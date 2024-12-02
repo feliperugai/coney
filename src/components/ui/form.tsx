@@ -40,7 +40,7 @@ function Form<
 }: FormProps<TFieldValues, TContext, TTransformedValues>) {
   return (
     <FormProvider {...props}>
-      <form onSubmit={props.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={props.handleSubmit(onSubmit, console.log)} className="space-y-4">
         {children}
       </form>
     </FormProvider>

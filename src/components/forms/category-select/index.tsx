@@ -25,8 +25,9 @@ export function CategorySelect({
   return (
     <FormSelect
       name={categoryKey}
-      label="Subcategoria"
-      placeholder="Selecione uma subcategoria"
+      className="flex-1"
+      label="Categoria"
+      placeholder="Selecione uma categoria"
       loading={isLoading || loading}
       items={
         data?.map((item) => ({
@@ -59,6 +60,7 @@ export function SubcategorySelect({
     <FormSelect
       name={subcategoryKey}
       label="Subcategoria"
+      className="flex-1"
       placeholder="Selecione uma subcategoria"
       loading={isLoading || loading}
       items={
@@ -75,9 +77,9 @@ export function SubcategorySelect({
 
 export function FormCategorySelect(props: CategorySelectProps) {
   return (
-    <>
+    <div className="flex items-center gap-4">
       <CategorySelect {...props} />
       <SubcategorySelect {...props} />
-    </>
+    </div>
   );
 }

@@ -1,14 +1,10 @@
-import { endOfMonth, startOfMonth } from "date-fns";
+import { endOfDay, endOfMonth, startOfDay, startOfMonth } from "date-fns";
 import { and, eq, gte, inArray, lte } from "drizzle-orm";
 import { z } from "zod";
-import {
-  categories,
-  recipients,
-  subcategories,
-  transactions,
-} from "~/server/db/schema";
+import { transactions } from "~/server/db/schema";
 import { insertTransactionSchema } from "~/server/db/tables/transactions";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { getStartOfMonth, getEndOfMonth } from "~/lib/date";
 
 export const transactionRouter = createTRPCRouter({
   create: protectedProcedure
@@ -57,39 +53,17 @@ export const transactionRouter = createTRPCRouter({
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const now = new Date();
-      const start = input?.startDate ?? startOfMonth(now);
-      const end = input?.endDate ?? endOfMonth(now);
+      const start = input?.startDate ?? getStartOfMonth();
+      const end = input?.endDate ?? getEndOfMonth();
 
-      return ctx.db
-        .select({
-          id: transactions.id,
-          date: transactions.date,
-          description: transactions.description,
-          amount: transactions.amount,
-          category: {
-            id: categories.id,
-            name: categories.name,
-          },
-          subcategory: {
-            id: subcategories.id,
-            name: subcategories.name,
-          },
-          recipient: {
-            id: recipients.id,
-            name: recipients.name,
-          },
-          createdAt: transactions.createdAt,
-          updatedAt: transactions.updatedAt,
-        })
-        .from(transactions)
-        .innerJoin(categories, eq(transactions.categoryId, categories.id))
-        .innerJoin(
-          subcategories,
-          eq(transactions.subcategoryId, subcategories.id),
-        )
-        .innerJoin(recipients, eq(transactions.recipientId, recipients.id))
-        .where(and(gte(transactions.date, start), lte(transactions.date, end)));
+      return ctx.db.query.transactions.findMany({
+        with: {
+          category: { columns: { id: true, name: true } },
+          subcategory: { columns: { id: true, name: true } },
+          recipient: { columns: { id: true, name: true } },
+        },
+        where: and(gte(transactions.date, start), lte(transactions.date, end)),
+      });
     }),
 
   getById: protectedProcedure

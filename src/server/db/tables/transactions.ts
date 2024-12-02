@@ -47,7 +47,7 @@ export type NewTransaction = InferInsertModel<typeof transactions>;
 
 export const insertTransactionSchema = z.object({
   date: z.date(),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).max(255).optional().nullable(),
   amount: z
     .number()
     .positive()

@@ -4,14 +4,14 @@ import { cn } from "~/lib/utils";
 
 interface MoneyCellProps {
   value: number | string;
-  variant: "income" | "expense" | "default";
+  variant?: "income" | "expense" | "default";
   className?: string;
 }
 
 const moneyVariants = cva("text-muted-foreground font-semibold ", {
   variants: {
     variant: {
-      default: "bg-primary text-primary-foreground hover:bg-primary/90",
+      default: "text-foreground",
       income: "text-success",
       expense: "text-muted",
     },
