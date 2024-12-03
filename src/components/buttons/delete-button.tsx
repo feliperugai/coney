@@ -10,11 +10,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { Button, type ButtonSize } from "~/components/ui/button";
 
 interface AlertDialogProps {
   children: React.ReactNode;
   displayName?: string;
+  size?: ButtonSize;
   loading?: boolean;
   onConfirm: () => void | Promise<void>;
 }
@@ -23,14 +24,17 @@ export function DeleteButton({
   children,
   displayName,
   loading,
+  size,
   onConfirm,
 }: AlertDialogProps) {
   const [open, setOpen] = useState(false);
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
+          size={size}
           loading={loading}
           onClick={(e) => {
             e.preventDefault();

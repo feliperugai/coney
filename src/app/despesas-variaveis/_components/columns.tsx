@@ -1,10 +1,14 @@
-import { type ColumnDef } from "@tanstack/react-table";
-import { EditActionsCell } from "~/components/ui/data-table/cells/editable-cell";
 import CurrencyCell from "~/components/ui/data-table/cells/money-cell";
+import { type Column } from "~/components/ui/data-table/columns";
 
 import { type Transaction } from "~/server/db/tables/transactions";
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns: Column<Transaction>[] = [
+  {
+    accessorKey: "date",
+    header: "Dia",
+    date: "dd",
+  },
   {
     accessorKey: "amount",
     header: "Valor",
@@ -17,14 +21,11 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "category.name",
     header: "Categoria",
+    enableSorting: false,
   },
   {
     accessorKey: "subcategory.name",
     header: "Subategoria",
-  },
-  {
-    accessorKey: "actions",
-    header: "Ações",
-    cell: EditActionsCell,
+    enableSorting: false,
   },
 ];

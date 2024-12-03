@@ -4,14 +4,25 @@ import { Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
+import useDeleteTransaction from "~/hooks/data/transactions/useDeleteTransaction";
+import { type Transaction } from "~/server/db/tables/transactions";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
 import TransactionDialog from "./_components/modal";
 
+function getTransaction(data: Transaction[] | undefined, id: string | null) {
+  if (!data) return undefined;
+  const found = data.find((cat) => cat.id === id);
+  return found ? { ...found, amount: parseFloat(found.amount) } : undefined;
+}
+
 export default function CategoriesPage() {
   const [transactionId, setTransactionId] = useQueryState("transactionId");
   const { data, isLoading } = api.transaction.getAll.useQuery();
-  const selectedTransaction = data?.find((cat) => cat.id === transactionId);
+  const { mutate } = useDeleteTransaction();
+
+  // const transaction = data?.find((cat) => cat.id === transactionId);
+  const selectedTransaction = getTransaction(data, transactionId);
 
   return (
     <div className="container mx-auto p-4">
@@ -28,6 +39,9 @@ export default function CategoriesPage() {
         onClick={async (transaction) =>
           void (await setTransactionId(transaction.id))
         }
+        onDelete={(rows) => {
+          mutate({ ids: rows.map((row) => row.id) });
+        }}
         columns={columns}
         data={data}
         enableRowSelection

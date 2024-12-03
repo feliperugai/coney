@@ -18,7 +18,7 @@ import { subcategories } from "./subcategories";
 export const transactions = pgTable("transaction", {
   id: uuid("id").primaryKey().defaultRandom(),
   date: timestamp("date").notNull(),
-  description: varchar("description", { length: 255 }),
+  description: varchar("description", { length: 255 }).notNull(),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
   categoryId: uuid("category_id").references(() => categories.id),
   subcategoryId: uuid("subcategory_id").references(() => subcategories.id),
@@ -47,7 +47,7 @@ export type NewTransaction = InferInsertModel<typeof transactions>;
 
 export const insertTransactionSchema = z.object({
   date: z.date(),
-  description: z.string().min(1).max(255).optional().nullable(),
+  description: z.string().min(1).max(255),
   amount: z
     .number()
     .positive()

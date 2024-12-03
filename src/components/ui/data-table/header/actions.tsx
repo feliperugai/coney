@@ -30,8 +30,14 @@ export function DataTableViewOptions<TData>({
     <div className="flex items-center space-x-4">
       {selectedRows.length > 0 && onDelete && (
         <DeleteButton
-        displayName={selectedRows.length > 1 ? "itens selecionados" : "item selecionado"}
-          onConfirm={() => onDelete(selectedRows.map((row) => row.original))}
+          size="sm"
+          displayName={
+            selectedRows.length > 1 ? "itens selecionados" : "item selecionado"
+          }
+          onConfirm={() => {
+            onDelete(selectedRows.map((row) => row.original));
+            table.resetRowSelection();
+          }}
         >
           <Trash className="size-4" />
         </DeleteButton>

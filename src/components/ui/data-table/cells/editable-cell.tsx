@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-// Tipos genéricos
+
 type Option = {
   label: string;
   value: string;
@@ -110,7 +110,7 @@ export function EditActionsCell<T>({ row, table }: EditCellProps<T>) {
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center justify-center space-x-2">
       {meta?.editedRows[row.id] ? (
         <>
           <Button
@@ -130,7 +130,7 @@ export function EditActionsCell<T>({ row, table }: EditCellProps<T>) {
         </>
       ) : (
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={() => setEditedRows("edit")}
         >

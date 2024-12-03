@@ -23,8 +23,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { CheckboxCell } from "./cells/checkbox-cell";
+import { getColumns } from "./columns";
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableToolbar } from "./header";
 import { TableSkeleton } from "./row-skeleton";
 
 interface DataTableProps<TData, TValue> {
@@ -60,9 +61,12 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns: enableRowSelection
-      ? [CheckboxCell as ColumnDef<TData>, ...columns]
-      : columns,
+    columns: getColumns(
+      //@ts-expect-error Nem ideia de como resolver esse erro
+      enableRowSelection
+        ? [CheckboxCell as ColumnDef<TData>, ...columns]
+        : columns,
+    ),
     enableRowSelection: true,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

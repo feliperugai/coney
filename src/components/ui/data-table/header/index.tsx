@@ -2,7 +2,7 @@
 
 import { type Table } from "@tanstack/react-table";
 import { Input } from "~/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "./actions";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
