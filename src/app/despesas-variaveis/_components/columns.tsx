@@ -1,9 +1,9 @@
+import { ImageCell } from "~/components/ui/data-table/cells/image-cell";
 import CurrencyCell from "~/components/ui/data-table/cells/money-cell";
 import { type Column } from "~/components/ui/data-table/columns";
+import { type Transactions } from "~/server/api/routers/transactions";
 
-import { type Transaction } from "~/server/db/tables/transactions";
-
-export const columns: Column<Transaction>[] = [
+export const columns: Column<Transactions[0]>[] = [
   {
     accessorKey: "date",
     header: "Dia",
@@ -17,15 +17,31 @@ export const columns: Column<Transaction>[] = [
   {
     accessorKey: "description",
     header: "Descrição",
+    cell: ({ row }) => {
+      const { recipient } = row.original;
+      return (
+        <ImageCell
+          src={recipient?.image}
+          color={recipient?.color}
+          description={
+            recipient?.name
+              ? `${recipient.name} - ${row.original.description}`
+              : row.original.description
+          }
+        />
+      );
+    },
   },
   {
     accessorKey: "category.name",
     header: "Categoria",
     enableSorting: false,
-  },
-  {
-    accessorKey: "subcategory.name",
-    header: "Subategoria",
-    enableSorting: false,
+    cell: ({ row }) => (
+      <div>
+        {row.original.category?.name}{" "}
+        {row.original.subcategory?.name ? "/" : ""}{" "}
+        {row.original.subcategory?.name}
+      </div>
+    ),
   },
 ];

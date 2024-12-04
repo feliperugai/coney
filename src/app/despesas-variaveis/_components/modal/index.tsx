@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
 
+import ReceipientSelect from "~/components/forms/recipient-select";
 import FormInput, { FormCurrencyInput } from "~/components/ui/input";
 import { useTransactionForm, type TransactionFormValues } from "./useForm";
 
@@ -49,6 +50,8 @@ export default function TransactionDialog({
               disabled={isLoading}
               required
             />
+
+            <ReceipientSelect name="recipientId" />
 
             <FormInput
               containerClassName="flex-1"

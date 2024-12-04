@@ -1,9 +1,14 @@
+import { type inferProcedureOutput } from "@trpc/server";
 import { and, eq, gte, inArray, lte } from "drizzle-orm";
 import { z } from "zod";
 import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
 import { transactions } from "~/server/db/schema";
 import { insertTransactionSchema } from "~/server/db/tables/transactions";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+
+export type Transactions = inferProcedureOutput<
+  typeof transactionRouter.getAll
+>;
 
 export const transactionRouter = createTRPCRouter({
   create: protectedProcedure
@@ -55,16 +60,17 @@ export const transactionRouter = createTRPCRouter({
       const start = input?.startDate ?? getStartOfMonth();
       const end = input?.endDate ?? getEndOfMonth();
 
-      const a = await ctx.db.query.transactions.findMany({
+      return ctx.db.query.transactions.findMany({
         with: {
           category: { columns: { id: true, name: true } },
           subcategory: { columns: { id: true, name: true } },
-          recipient: { columns: { id: true, name: true } },
+          recipient: {
+            columns: { id: true, name: true, image: true, color: true },
+          },
         },
         where: and(gte(transactions.date, start), lte(transactions.date, end)),
         orderBy: (transactions, { asc }) => asc(transactions.date), // Adiciona o ORDER BY date ASC
       });
-      return a;
     }),
 
   getById: protectedProcedure

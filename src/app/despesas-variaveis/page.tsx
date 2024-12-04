@@ -20,8 +20,6 @@ export default function CategoriesPage() {
   const [transactionId, setTransactionId] = useQueryState("transactionId");
   const { data, isLoading } = api.transaction.getAll.useQuery();
   const { mutate } = useDeleteTransaction();
-
-  // const transaction = data?.find((cat) => cat.id === transactionId);
   const selectedTransaction = getTransaction(data, transactionId);
 
   return (
