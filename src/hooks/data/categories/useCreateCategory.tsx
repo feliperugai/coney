@@ -5,7 +5,7 @@ interface CreateCategoryProps {
   onSuccess?: () => void | Promise<void>;
 }
 
-export function useCreateCategory({ onSuccess }: CreateCategoryProps) {
+export function useCreateCategory({ onSuccess }: CreateCategoryProps = {}) {
   const utils = api.useUtils();
 
   const {

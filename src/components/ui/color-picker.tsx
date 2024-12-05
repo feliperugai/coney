@@ -99,8 +99,8 @@ export function ColorPicker({
 
   // Determine default tab
   const defaultTab = useMemo(() => {
-    if (availableTabs.length === 0) return "solid";
-
+    if (availableTabs.length === 0 || !background) return "solid";
+    
     if (background.includes("url") && enabledTabs.image) return "image";
     if (background.includes("gradient") && enabledTabs.gradient)
       return "gradient";

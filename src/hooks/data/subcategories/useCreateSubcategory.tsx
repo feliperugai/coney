@@ -2,10 +2,12 @@ import { toast } from "sonner";
 import { api } from "~/trpc/react";
 
 interface CreateSubcategoryProps {
-  onSuccess?: () => void | Promise<void>;
+  onSuccess?: (() => void | Promise<void>) | undefined;
 }
 
-export function useCreateSubcategory({ onSuccess }: CreateSubcategoryProps) {
+export function useCreateSubcategory({
+  onSuccess,
+}: CreateSubcategoryProps = {}) {
   const utils = api.useUtils();
 
   const {

@@ -7,7 +7,7 @@ interface RecipientSelectProps {
   label?: string;
 }
 
-export default function ReceipientSelect({
+export default function RecipientSelect({
   name,
   label = "Destinatário",
 }: RecipientSelectProps) {
@@ -17,6 +17,8 @@ export default function ReceipientSelect({
     <FormAutoComplete
       name={name}
       label={label}
+      newItemProp="newRecipient"
+      loading={isLoading}
       items={
         data?.map((item) => ({
           value: item.id,
@@ -24,7 +26,6 @@ export default function ReceipientSelect({
           image: item.image,
         })) ?? []
       }
-      isLoading={isLoading}
     />
   );
 }

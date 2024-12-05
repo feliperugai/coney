@@ -33,7 +33,7 @@ export function VisualizationCell({
           height={28}
           className="rounded-md"
           alt={"Visualização"}
-          onLoadingComplete={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
           onError={() => setLoading(false)}
         />
       </Center>

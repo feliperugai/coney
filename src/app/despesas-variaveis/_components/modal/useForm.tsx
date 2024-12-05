@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useCreateTransaction } from "~/hooks/data/transactions/useCreateTransaction";
 import { useUpdateTransaction } from "~/hooks/data/transactions/useUpdateTransaction";
 import { currency } from "~/lib/zod";
+import { api } from "~/trpc/react";
 
 const transactionFormSchema = z.object({
   date: z.coerce.date(),
@@ -16,6 +17,7 @@ const transactionFormSchema = z.object({
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
+  newRecipient: z.string().optional().nullable(),
 });
 
 export type TransactionFormValues = z.infer<typeof transactionFormSchema>;
@@ -37,9 +39,34 @@ export function useTransactionForm(
     onSuccess: closeModal,
   });
 
+  const { mutateAsync } = api.recipient.create.useMutation();
+
   const isLoading = isCreating || isUpdating;
 
-  function onSubmit(data: TransactionFormValues) {
+  async function createRecipient(data: TransactionFormValues) {
+    try {
+      const recipient = await mutateAsync({
+        name: data.newRecipient!,
+        categoryId: data.categoryId!,
+        subcategoryId: data.subcategoryId!,
+      });
+
+      if (!recipient) {
+        console.error("Could not create recipient!");
+        return;
+      }
+
+      return recipient.id;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onSubmit(data: TransactionFormValues) {
+    if (data.newRecipient) {
+      data.recipientId = await createRecipient(data);
+    }
+    console.log({ data });
     if (initialData) {
       updateTransaction({ id: initialData.id, data });
     } else {

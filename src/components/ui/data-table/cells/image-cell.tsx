@@ -35,7 +35,7 @@ export function ImageCell({ src, color, description }: ImageCellProps) {
         height={28}
         className="rounded-md"
         alt={"Visualização"}
-        onLoadingComplete={() => setLoading(false)}
+        onLoad={() => setLoading(false)}
         onError={() => setLoading(false)}
       />
       {description}

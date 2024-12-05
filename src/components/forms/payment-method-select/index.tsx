@@ -17,6 +17,7 @@ export default function PaymentMethodSelect({
     <FormAutoComplete
       name={name}
       label={label}
+      loading={isLoading}
       items={
         data?.map((item) => ({
           value: item.id,
@@ -24,7 +25,6 @@ export default function PaymentMethodSelect({
           image: item.image,
         })) ?? []
       }
-      isLoading={isLoading}
     />
   );
 }

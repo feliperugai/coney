@@ -11,7 +11,7 @@ export const recipientRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createRecipientSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
+      const [recipient] = await ctx.db
         .insert(recipients)
         .values({
           ...input,
@@ -19,6 +19,8 @@ export const recipientRouter = createTRPCRouter({
           updatedAt: new Date(),
         })
         .returning();
+
+      return recipient;
     }),
 
   update: protectedProcedure

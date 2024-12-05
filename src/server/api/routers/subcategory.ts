@@ -12,7 +12,11 @@ export const subcategoryRouter = createTRPCRouter({
   create: protectedProcedure
     .input(insertSubcategorySchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.insert(subcategories).values(input).returning();
+      const [result] = await ctx.db
+        .insert(subcategories)
+        .values(input)
+        .returning();
+      return result;
     }),
 
   update: publicProcedure

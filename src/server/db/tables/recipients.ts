@@ -10,12 +10,8 @@ export const recipients = pgTable("recipient", {
   color: varchar("color", { length: 7 }),
   description: text("description"),
   image: text("image"),
-  categoryId: uuid("category_id")
-    .notNull()
-    .references(() => categories.id),
-  subcategoryId: uuid("subcategory_id")
-    .notNull()
-    .references(() => subcategories.id),
+  categoryId: uuid("category_id").references(() => categories.id),
+  subcategoryId: uuid("subcategory_id").references(() => subcategories.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -37,8 +33,8 @@ export const recipientSchema = z.object({
   description: z.string().optional().nullable(),
   image: z.string().url().optional().nullable(),
   color: z.string().optional().nullable(),
-  categoryId: z.string().uuid(),
-  subcategoryId: z.string().uuid(),
+  categoryId: z.string().uuid().optional().nullable(),
+  subcategoryId: z.string().uuid().optional().nullable(),
 });
 
 export type Recipient = InferInsertModel<typeof recipients>;

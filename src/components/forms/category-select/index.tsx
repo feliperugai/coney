@@ -1,5 +1,7 @@
-import { useWatch } from "react-hook-form";
-import { FormSelect } from "~/components/ui/select";
+import { useFormContext, useWatch } from "react-hook-form";
+import { FormAutoComplete } from "~/components/ui/autocomplete";
+import { useCreateCategory } from "~/hooks/data/categories/useCreateCategory";
+import { useCreateSubcategory } from "~/hooks/data/subcategories/useCreateSubcategory";
 import { api } from "~/trpc/react";
 
 interface CategorySelectProps {
@@ -18,17 +20,39 @@ interface CategorySelectProps {
 
 export function CategorySelect({
   categoryKey,
+  subcategoryKey,
   loading,
   ...props
 }: CategorySelectProps) {
-  const { data, isLoading } = api.category.getAll.useQuery();
+  const form = useFormContext();
+  const { data, isLoading, refetch } = api.category.getAll.useQuery();
+  const { mutateAsync, isCreating } = useCreateCategory();
+
+  async function createCategory(name: string) {
+    try {
+      const category = await mutateAsync({
+        name: name,
+      });
+
+      await refetch();
+
+      if (!category?.id) return "";
+
+      form.setValue(subcategoryKey, undefined);
+      return category.id;
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
+  }
   return (
-    <FormSelect
+    <FormAutoComplete
       name={categoryKey}
       className="flex-1"
       label="Categoria"
       placeholder="Selecione uma categoria"
-      loading={isLoading || loading}
+      loading={isLoading ?? loading ?? isCreating}
+      onAddNewItem={createCategory}
       items={
         data?.map((item) => ({
           value: item.id,
@@ -49,20 +73,43 @@ export function SubcategorySelect({
 }: CategorySelectProps) {
   const category = useWatch({ name: categoryKey });
 
-  const { data, isLoading } = api.subcategory.getByCategoryId.useQuery(
+  const { data, isLoading, refetch } = api.subcategory.getByCategoryId.useQuery(
     category,
     {
       enabled: !!category,
     },
   );
 
+  const { mutateAsync, isCreating } = useCreateSubcategory();
+
+  async function createSubcategory(name: string) {
+    try {
+      const subcategory = await mutateAsync({
+        name: name,
+        categoryId: category,
+      });
+
+      await refetch();
+
+      if (!subcategory?.id) {
+        return "";
+      }
+
+      return subcategory.id;
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
+  }
+
   return (
-    <FormSelect
+    <FormAutoComplete
       name={subcategoryKey}
       label="Subcategoria"
       className="flex-1"
       placeholder="Selecione uma subcategoria"
-      loading={isLoading || loading}
+      loading={isLoading ?? loading ?? isCreating}
+      onAddNewItem={createSubcategory}
       items={
         data?.map((item) => ({
           value: item.id,

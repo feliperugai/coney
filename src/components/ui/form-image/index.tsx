@@ -67,7 +67,6 @@ export function FormImage({
                           props.imageClassName,
                         )}
                         alt={"Visualização"}
-                        onLoadingComplete={stopLoading}
                         onLoad={stopLoading}
                         onError={stopLoading}
                       />
