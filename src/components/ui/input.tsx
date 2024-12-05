@@ -68,59 +68,57 @@ export default function FormInput({
   const form = useFormContext();
 
   return (
-    <div className={cn("mb-3 space-y-2", containerClassName)}>
-      <FormField
-        control={form.control}
-        name={name}
-        disabled={disabled}
-        render={({ field: f, fieldState: { error } }) => {
-          return (
-            <FormItem>
-              {label && (
-                <FormLabel>
-                  {label} {required && !readonly && <RequiredInput />}
-                </FormLabel>
-              )}
-              {readonly ? (
-                <div>{f.value || "-"}</div>
-              ) : (
-                <FormControl>
-                  {type === "textarea" ? (
-                    <Textarea
-                      rows={5}
-                      placeholder={placeholder}
-                      {...f}
-                      className={cn(
-                        error?.message &&
-                          "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
-                        className,
-                      )}
-                      value={f.value?.toString() || ""}
-                      autoFocus={autoFocus}
-                    />
-                  ) : (
-                    <Input
-                      type={type}
-                      placeholder={placeholder}
-                      {...f}
-                      className={cn(
-                        error?.message &&
-                          "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
-                        className,
-                      )}
-                      value={f.value?.toString() || ""}
-                      autoFocus={autoFocus}
-                    />
-                  )}
-                </FormControl>
-              )}
-              {description && <FormDescription>{description}</FormDescription>}
-              <FormMessage />
-            </FormItem>
-          );
-        }}
-      />
-    </div>
+    <FormField
+      control={form.control}
+      name={name}
+      disabled={disabled}
+      render={({ field: f, fieldState: { error } }) => {
+        return (
+          <FormItem className={cn("space-y-2", containerClassName)}>
+            {label && (
+              <FormLabel>
+                {label} {required && !readonly && <RequiredInput />}
+              </FormLabel>
+            )}
+            {readonly ? (
+              <div>{f.value || "-"}</div>
+            ) : (
+              <FormControl>
+                {type === "textarea" ? (
+                  <Textarea
+                    rows={5}
+                    placeholder={placeholder}
+                    {...f}
+                    className={cn(
+                      error?.message &&
+                        "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
+                      className,
+                    )}
+                    value={f.value?.toString() || ""}
+                    autoFocus={autoFocus}
+                  />
+                ) : (
+                  <Input
+                    type={type}
+                    placeholder={placeholder}
+                    {...f}
+                    className={cn(
+                      error?.message &&
+                        "border-destructive focus:border-none focus:ring-destructive focus-visible:ring-destructive",
+                      className,
+                    )}
+                    value={f.value?.toString() || ""}
+                    autoFocus={autoFocus}
+                  />
+                )}
+              </FormControl>
+            )}
+            {description && <FormDescription>{description}</FormDescription>}
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
   );
 }
 
@@ -180,6 +178,7 @@ type CurrencyInputProps = {
   placeholder: string;
   readonly?: boolean;
   required?: boolean;
+  containerClassName?: string;
   locale?: Intl.LocalesArgument;
   currency?: "BRL" | "USD" | "EUR";
 };
@@ -192,6 +191,7 @@ function FormCurrencyInput({
   locale = "pt-br",
   currency = "BRL",
   required,
+  containerClassName,
   readonly = false,
 }: CurrencyInputProps) {
   const moneyFormatter = new Intl.NumberFormat(locale, {
@@ -221,7 +221,7 @@ function FormCurrencyInput({
       name={name}
       render={({ field, fieldState: { error } }) => {
         return (
-          <FormItem>
+          <FormItem className={cn("space-y-2", containerClassName)}>
             {label && (
               <FormLabel>
                 {label} {required && !readonly && <RequiredInput />}

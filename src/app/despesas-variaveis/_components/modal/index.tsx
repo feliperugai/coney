@@ -41,15 +41,26 @@ export default function TransactionDialog({
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
           <div className="flex flex-col gap-6">
-            <FormInput
-              containerClassName="flex-1"
-              name="date"
-              type="date"
-              label="Data"
-              placeholder="Digite a descrição"
-              disabled={isLoading}
-              required
-            />
+            <div className="flex items-center gap-4">
+              <FormInput
+                containerClassName="flex-1"
+                name="date"
+                type="date"
+                label="Data"
+                placeholder="Digite a descrição"
+                disabled={isLoading}
+                required
+              />
+
+              <FormCurrencyInput
+                containerClassName="flex-1"
+                name="amount"
+                label="Valor"
+                placeholder="Ex: 1500.00"
+                disabled={isLoading}
+                required
+              />
+            </div>
 
             <ReceipientSelect name="recipientId" />
 
@@ -58,14 +69,6 @@ export default function TransactionDialog({
               name="description"
               label="Descrição"
               placeholder="Digite a descrição"
-              disabled={isLoading}
-              required
-            />
-
-            <FormCurrencyInput
-              name="amount"
-              label="Valor"
-              placeholder="Ex: 1500.00"
               disabled={isLoading}
               required
             />
