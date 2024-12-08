@@ -4,6 +4,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const CheckboxCell: ColumnDef<any, any> = {
   id: "select",
+  className: "w-8 px-2",
   header: ({ table }) => (
     <Checkbox
       checked={

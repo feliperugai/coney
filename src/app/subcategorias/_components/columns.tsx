@@ -10,7 +10,7 @@ export const columns: ColumnDef<Subcategory>[] = [
   {
     accessorKey: "color",
     header: VisualizationHeader,
-    cell: ({ row }) => <VisualizationCell data={row.original} />,
+    cell: ({ row }) => <VisualizationCell data={row.original} />, 
   },
   {
     accessorKey: "name",

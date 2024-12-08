@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 
 type ImageCellProps = {
   src?: string | null;
   color?: string | null;
-  description?: string;
+  description?: React.ReactNode;
 };
 
 export function ImageCell({ src, color, description }: ImageCellProps) {

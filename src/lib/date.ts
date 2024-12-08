@@ -8,7 +8,7 @@ export function getStartOfMonth(date?: Date) {
       0,
       0,
       0,
-      0, // Zerando horas, minutos, segundos e milissegundos
+      1, // Zerando horas, minutos, segundos e milissegundos
     ),
   );
 }

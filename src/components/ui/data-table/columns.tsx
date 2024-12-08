@@ -100,17 +100,15 @@ export function getColumns<T>(columns: Column<T>[]): ColumnDef<T>[] {
       };
     }
 
-    if (item.center) {
-      if (!item.cell) {
-        item.cell = ({ row }: any) => {
-          const value = get(row.original, item.accessorKey);
-          return (
-            <div className={cn(item.center && "text-center")}>
-              {value as string}
-            </div>
-          );
-        };
-      }
+    if (!item.cell) {
+      item.cell = ({ row }: any) => {
+        const value = get(row.original, item.accessorKey);
+        return (
+          <div className={cn(item.center && "text-center")}>
+            {value as string}
+          </div>
+        );
+      };
     }
 
     return item as ColumnDef<T>;

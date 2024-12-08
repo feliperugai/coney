@@ -51,14 +51,17 @@ export const transactionRouter = createTRPCRouter({
     .input(
       z
         .object({
-          startDate: z.date().optional(),
-          endDate: z.date().optional(),
+          startDate: z.string().date().optional(),
+          endDate: z.string().date().optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const start = input?.startDate ?? getStartOfMonth();
-      const end = input?.endDate ?? getEndOfMonth();
+      const start = input?.startDate
+        ? new Date(input.startDate)
+        : getStartOfMonth();
+
+      const end = input?.endDate ? new Date(input.endDate) : getEndOfMonth();
 
       return ctx.db.query.transactions.findMany({
         with: {

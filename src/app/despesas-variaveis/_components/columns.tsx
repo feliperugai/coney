@@ -24,9 +24,12 @@ export const columns: Column<Transactions[0]>[] = [
           src={recipient?.image}
           color={recipient?.color}
           description={
-            recipient?.name
-              ? `${recipient.name} - ${row.original.description}`
-              : row.original.description
+            <div className="flex flex-col py-1">
+              {recipient?.name && (
+                <div className="text-xs font-semibold">{recipient.name}</div>
+              )}
+              <div>{row.original.description}</div>
+            </div>
           }
         />
       );

@@ -42,6 +42,7 @@ export default function SelectFilter<T>({
   return (
     <Select onValueChange={handleChange}>
       <SelectTrigger className="justify-center gap-1 border-none">
+        {label}
         {current ? (
           <SelectValue>
             {label}: {current}
