@@ -1,21 +1,19 @@
 import React from "react";
-import { FormAutoComplete } from "~/components/ui/autocomplete";
+import {
+  type ComboboxProps,
+  FormAutoComplete,
+} from "~/components/ui/autocomplete";
 import { api } from "~/trpc/react";
 
-interface RecipientSelectProps {
-  name: string;
-  label?: string;
-}
-
 export default function RecipientSelect({
-  name,
   label = "Destinatário",
-}: RecipientSelectProps) {
+  ...props
+}: ComboboxProps) {
   const { data, isLoading } = api.recipient.getAll.useQuery();
 
   return (
     <FormAutoComplete
-      name={name}
+      {...props}
       label={label}
       newItemProp="newRecipient"
       loading={isLoading}

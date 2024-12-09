@@ -14,6 +14,7 @@ const transactionFormSchema = z.object({
   date: z.coerce.date(),
   description: z.string().min(1).max(255),
   amount: currency(),
+  paymentMethodId: z.string().uuid(),
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),

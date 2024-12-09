@@ -15,6 +15,27 @@ export const columns: Column<Transactions[0]>[] = [
     cell: ({ row }) => <CurrencyCell value={row.original.amount} />,
   },
   {
+    accessorKey: "paymentMethod.name",
+    header: "Forma de pagamento",
+    cell: ({ row }) => {
+      const { paymentMethod } = row.original;
+      console.log({ paymentMethod });
+      return (
+        <ImageCell
+          src={paymentMethod?.image}
+          color={paymentMethod?.color}
+          description={
+            <div className="flex flex-col py-1">
+              {paymentMethod?.name && (
+                <div className="font-semibold">{paymentMethod.name}</div>
+              )}
+            </div>
+          }
+        />
+      );
+    },
+  },
+  {
     accessorKey: "description",
     header: "Descrição",
     cell: ({ row }) => {

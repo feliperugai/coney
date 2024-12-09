@@ -11,7 +11,8 @@ import {
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
 
-import ReceipientSelect from "~/components/forms/recipient-select";
+import PaymentMethodSelect from "~/components/forms/payment-method-select";
+import RecipientSelect from "~/components/forms/recipient-select";
 import FormInput, { FormCurrencyInput } from "~/components/ui/input";
 import { useTransactionForm, type TransactionFormValues } from "./useForm";
 
@@ -62,7 +63,18 @@ export default function TransactionDialog({
               />
             </div>
 
-            <ReceipientSelect name="recipientId" />
+            <div className="flex items-center gap-4">
+              <RecipientSelect
+                name="recipientId"
+                className="flex-1"
+                disabled={isLoading}
+              />
+              <PaymentMethodSelect
+                className="flex-1"
+                name="paymentMethodId"
+                disabled={isLoading}
+              />
+            </div>
 
             <FormInput
               containerClassName="flex-1"

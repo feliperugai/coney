@@ -1,21 +1,19 @@
 import React from "react";
-import { FormAutoComplete } from "~/components/ui/autocomplete";
+import {
+  type ComboboxProps,
+  FormAutoComplete,
+} from "~/components/ui/autocomplete";
 import { api } from "~/trpc/react";
 
-interface PaymentMethodSelectProps {
-  name: string;
-  label?: string;
-}
-
 export default function PaymentMethodSelect({
-  name,
   label = "Forma de pagamento",
-}: PaymentMethodSelectProps) {
+  ...props
+}: ComboboxProps) {
   const { data, isLoading } = api.paymentMethod.getAll.useQuery();
 
   return (
     <FormAutoComplete
-      name={name}
+      {...props}
       label={label}
       loading={isLoading}
       items={

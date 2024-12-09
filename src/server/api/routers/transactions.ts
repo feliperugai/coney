@@ -65,6 +65,7 @@ export const transactionRouter = createTRPCRouter({
 
       return ctx.db.query.transactions.findMany({
         with: {
+          paymentMethod: { columns: { id: true, name: true, image: true, color: true } },
           category: { columns: { id: true, name: true } },
           subcategory: { columns: { id: true, name: true } },
           recipient: {

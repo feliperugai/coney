@@ -38,7 +38,7 @@ export type ComboboxOption = {
 
 export interface ComboboxProps {
   items?: ComboboxOption[];
-  label: string;
+  label?: string;
   triggerPlaceholder?: string;
   searchPlaceholder?: string;
   description?: string;
@@ -104,7 +104,7 @@ export function FormAutoComplete({
 
         return (
           <FormItem className={cn("flex flex-col space-y-3 pt-1.5", className)}>
-            <FormLabel>{label}</FormLabel>
+            {label && <FormLabel>{label}</FormLabel>}
             <FormControl>
               {isNewItem ? (
                 <div className="flex items-start gap-3">
