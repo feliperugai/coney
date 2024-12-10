@@ -27,9 +27,9 @@ export default function CategoriesPage() {
     from: getStartOfMonth(),
     to: new Date(),
   });
-  const { data, isLoading, refetch } = api.transaction.getAll.useQuery({
+  const { data, isLoading } = api.transaction.getAll.useQuery({
     startDate: format(range.from!, "yyyy-MM-dd"),
-    endDate: format(range.to!, "yyyy-MM-dd"),
+    endDate: format(range.to ?? range.from!, "yyyy-MM-dd"),
   });
 
   const { mutate } = useDeleteTransaction();

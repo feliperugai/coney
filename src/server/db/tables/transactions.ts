@@ -4,6 +4,7 @@ import {
   type InferSelectModel,
 } from "drizzle-orm";
 import {
+  integer,
   numeric,
   pgTable,
   timestamp,
@@ -11,7 +12,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
-import { paymentMethods } from "../schema";
+import { installments, paymentMethods } from "../schema";
 import { categories } from "./categories";
 import { recipients } from "./recipients";
 import { subcategories } from "./subcategories";
@@ -24,6 +25,8 @@ export const transactions = pgTable("transaction", {
   ),
   description: varchar("description", { length: 255 }).notNull(),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
+  installmentId: uuid("installment_id").references(() => installments.id),
+  installmentNumber: integer("installment"),
   categoryId: uuid("category_id").references(() => categories.id),
   subcategoryId: uuid("subcategory_id").references(() => subcategories.id),
   recipientId: uuid("recipient_id").references(() => recipients.id),
@@ -32,6 +35,10 @@ export const transactions = pgTable("transaction", {
 });
 
 export const transactionRelations = relations(transactions, ({ one }) => ({
+  installment: one(installments, {
+    fields: [transactions.installmentId],
+    references: [installments.id],
+  }),
   category: one(categories, {
     fields: [transactions.categoryId],
     references: [categories.id],
@@ -61,6 +68,7 @@ export const insertTransactionSchema = z.object({
     .number()
     .positive()
     .transform((value) => value.toString()),
+  installmentCount: z.number().min(1).max(100).optional().nullable(),
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),

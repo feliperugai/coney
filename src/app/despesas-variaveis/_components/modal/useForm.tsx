@@ -14,11 +14,17 @@ const transactionFormSchema = z.object({
   date: z.coerce.date(),
   description: z.string().min(1).max(255),
   amount: currency(),
-  paymentMethodId: z.string().uuid(),
+  paymentMethodId: z.string().uuid().optional().nullable(),
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
   newRecipient: z.string().optional().nullable(),
+  installmentCount: z
+    .number({ coerce: true })
+    .min(1)
+    .max(100)
+    .optional()
+    .nullable(),
 });
 
 export type TransactionFormValues = z.infer<typeof transactionFormSchema>;

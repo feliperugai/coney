@@ -1,20 +1,18 @@
-import { type inferProcedureOutput } from "@trpc/server";
-import { and, eq, gte, inArray, lte } from "drizzle-orm";
 import { z } from "zod";
-import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
-import { transactions } from "~/server/db/schema";
 import { insertTransactionSchema } from "~/server/db/tables/transactions";
+import { TransactionService } from "../services/transaction-service";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
-export type Transactions = inferProcedureOutput<
-  typeof transactionRouter.getAll
+export type Transactions = Awaited<
+  ReturnType<typeof TransactionService.prototype.getAll>
 >;
 
 export const transactionRouter = createTRPCRouter({
   create: protectedProcedure
     .input(insertTransactionSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.insert(transactions).values(input).returning();
+      const service = new TransactionService(ctx.db);
+      return service.create(input);
     }),
 
   update: protectedProcedure
@@ -25,26 +23,22 @@ export const transactionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
-        .update(transactions)
-        .set(input.data)
-        .where(eq(transactions.id, input.id))
-        .returning();
+      const service = new TransactionService(ctx.db);
+      return service.update(input.id, input.data);
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.delete(transactions).where(eq(transactions.id, input.id));
+      const service = new TransactionService(ctx.db);
+      return service.delete(input.id);
     }),
 
   deleteMany: protectedProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
-        .delete(transactions)
-        .where(inArray(transactions.id, input.ids))
-        .returning();
+      const service = new TransactionService(ctx.db);
+      return service.deleteMany(input.ids);
     }),
 
   getAll: protectedProcedure
@@ -57,33 +51,14 @@ export const transactionRouter = createTRPCRouter({
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const start = input?.startDate
-        ? new Date(input.startDate)
-        : getStartOfMonth();
-
-      const end = input?.endDate ? new Date(input.endDate) : getEndOfMonth();
-
-      return ctx.db.query.transactions.findMany({
-        with: {
-          paymentMethod: { columns: { id: true, name: true, image: true, color: true } },
-          category: { columns: { id: true, name: true } },
-          subcategory: { columns: { id: true, name: true } },
-          recipient: {
-            columns: { id: true, name: true, image: true, color: true },
-          },
-        },
-        where: and(gte(transactions.date, start), lte(transactions.date, end)),
-        orderBy: (transactions, { asc }) => asc(transactions.date), // Adiciona o ORDER BY date ASC
-      });
+      const service = new TransactionService(ctx.db);
+      return service.getAll(input);
     }),
 
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const result = await ctx.db
-        .select()
-        .from(transactions)
-        .where(eq(transactions.id, input.id));
-      return result[0];
+      const service = new TransactionService(ctx.db);
+      return service.getById(input.id);
     }),
 });

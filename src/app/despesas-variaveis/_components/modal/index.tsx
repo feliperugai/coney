@@ -31,7 +31,7 @@ export default function TransactionDialog({
     () => onOpenChange(false),
     initialData,
   );
-  console.log(form.formState.errors);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -60,6 +60,12 @@ export default function TransactionDialog({
                 placeholder="Ex: 1500.00"
                 disabled={isLoading}
                 required
+              />
+
+              <FormInput
+                name="installmentCount"
+                label="Parcelas"
+                type="number"
               />
             </div>
 
