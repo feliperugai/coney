@@ -8,37 +8,43 @@ import { type DateRange } from "react-day-picker";
 import { Button } from "~/components/ui/button";
 import { DataTable } from "~/components/ui/data-table";
 import { DateRangePicker } from "~/components/ui/date-range-picker";
-import useDeleteTransaction from "~/hooks/data/transactions/useDeleteTransaction";
+import useDeleteInstallment from "~/hooks/data/intstallments/useDeleteInstallment";
 import { getStartOfMonth } from "~/lib/date";
-import { type Transaction } from "~/server/db/tables/transactions";
+import { type InstallmentPurchase } from "~/server/db/tables/installmentsPurchases";
 import { api } from "~/trpc/react";
 import { columns } from "./_components/columns";
-import TransactionDialog from "./_components/modal";
+import InstallmentDialog from "./_components/modal";
 
-function getTransaction(data: Transaction[] | undefined, id: string | null) {
+function getInstallment(
+  data: InstallmentPurchase[] | undefined,
+  id: string | null,
+) {
   if (!data) return undefined;
   const found = data.find((cat) => cat.id === id);
-  return found ? { ...found, amount: parseFloat(found.amount) } : undefined;
+  return found
+    ? { ...found, amount: parseFloat(found.installmentAmount) }
+    : undefined;
 }
 
-export default function TransactionsPage() {
-  const [transactionId, setTransactionId] = useQueryState("transactionId");
+export default function InstallmentsPage() {
+  const [id, setId] = useQueryState("id");
   const [range, setRange] = useState<DateRange>({
     from: getStartOfMonth(),
     to: new Date(),
   });
-  const { data, isLoading } = api.transaction.getAll.useQuery({
+
+  const { data, isLoading } = api.installmentPurchases.getAll.useQuery({
     startDate: format(range.from!, "yyyy-MM-dd"),
     endDate: format(range.to ?? range.from!, "yyyy-MM-dd"),
   });
 
-  const { mutate } = useDeleteTransaction();
-  const selectedTransaction = getTransaction(data, transactionId);
+  const { mutate } = useDeleteInstallment();
+  const selectedInstallment = getInstallment(data, id);
 
   return (
     <div className="container mx-auto p-4">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Despesas variáveis</h1>
+        <h1 className="text-2xl font-bold">Compras parceladas</h1>
         <DateRangePicker
           onUpdate={({ range }) => setRange(range)}
           initialDateFrom={getStartOfMonth()}
@@ -47,7 +53,7 @@ export default function TransactionsPage() {
           locale="pt-BR"
           showCompare={false}
         />
-        <Button onClick={() => setTransactionId("new")}>
+        <Button onClick={() => setId("new")}>
           <Plus className="mr-2 size-4" />
           Nova
         </Button>
@@ -55,9 +61,7 @@ export default function TransactionsPage() {
 
       <DataTable
         loading={isLoading}
-        onClick={async (transaction) =>
-          void (await setTransactionId(transaction.id))
-        }
+        onClick={async (installment) => void (await setId(installment.id))}
         onDelete={(rows) => {
           mutate({ ids: rows.map((row) => row.id) });
         }}
@@ -66,15 +70,13 @@ export default function TransactionsPage() {
         enableRowSelection
       />
 
-      {transactionId && (
-        <TransactionDialog
-          open={transactionId !== null}
+      {id && (
+        <InstallmentDialog
+          open={id !== null}
           onOpenChange={async (open) => {
-            if (!open) await setTransactionId(null);
+            if (!open) await setId(null);
           }}
-          initialData={
-            transactionId === "new" ? undefined : selectedTransaction
-          }
+          initialData={id === "new" ? undefined : selectedInstallment}
         />
       )}
     </div>

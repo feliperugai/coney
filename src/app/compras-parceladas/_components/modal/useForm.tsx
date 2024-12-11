@@ -5,12 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCreateTransaction } from "~/hooks/data/transactions/useCreateTransaction";
-import { useUpdateTransaction } from "~/hooks/data/transactions/useUpdateTransaction";
+import { useCreateInstallmentPurchase } from "~/hooks/data/intstallments/useCreateInstallment";
+import { useUpdateInstallmentPurchase } from "~/hooks/data/intstallments/useUpdateInstallment";
 import { currency } from "~/lib/zod";
 import { api } from "~/trpc/react";
 
-const transactionFormSchema = z.object({
+const scheam = z.object({
   date: z.coerce.date(),
   description: z.string().min(1).max(255),
   amount: currency(),
@@ -21,30 +21,32 @@ const transactionFormSchema = z.object({
   newRecipient: z.string().optional().nullable(),
 });
 
-export type TransactionFormValues = z.infer<typeof transactionFormSchema>;
+export type InstallmentPurchaseFormValues = z.infer<typeof scheam>;
 
 function getDate(date?: string | Date): any {
   date = date ?? new Date();
   return new Date(date).toISOString().split("T")[0];
 }
 
-export function useTransactionForm(
+export function useInstallmentPurchaseForm(
   closeModal: () => void,
-  initialData?: { id: string } & TransactionFormValues,
+  initialData?: { id: string } & InstallmentPurchaseFormValues,
 ) {
-  const { createTransaction, isCreating } = useCreateTransaction({
-    onSuccess: closeModal,
-  });
+  const { createInstallmentPurchase, isCreating } =
+    useCreateInstallmentPurchase({
+      onSuccess: closeModal,
+    });
 
-  const { updateTransaction, isUpdating } = useUpdateTransaction({
-    onSuccess: closeModal,
-  });
+  const { updateInstallmentPurchase, isUpdating } =
+    useUpdateInstallmentPurchase({
+      onSuccess: closeModal,
+    });
 
   const { mutateAsync } = api.recipient.create.useMutation();
 
   const isLoading = isCreating || isUpdating;
 
-  async function createRecipient(data: TransactionFormValues) {
+  async function createRecipient(data: InstallmentPurchaseFormValues) {
     try {
       const recipient = await mutateAsync({
         name: data.newRecipient!,
@@ -53,7 +55,7 @@ export function useTransactionForm(
       });
 
       if (!recipient) {
-        console.error("Could not create recipient!");
+        console.error("Could not create installment purchase");
         return;
       }
 
@@ -63,20 +65,20 @@ export function useTransactionForm(
     }
   }
 
-  async function onSubmit(data: TransactionFormValues) {
+  async function onSubmit(data: InstallmentPurchaseFormValues) {
     if (data.newRecipient) {
       data.recipientId = await createRecipient(data);
     }
     console.log({ data });
     if (initialData) {
-      updateTransaction({ id: initialData.id, data });
+      updateInstallmentPurchase({ id: initialData.id, data });
     } else {
-      createTransaction(data);
+      createInstallmentPurchase(data);
     }
   }
 
-  const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(transactionFormSchema),
+  const form = useForm<InstallmentPurchaseFormValues>({
+    resolver: zodResolver(scheam),
     defaultValues: initialData ?? {
       date: getDate(),
     },

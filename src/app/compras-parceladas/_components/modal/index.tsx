@@ -14,20 +14,23 @@ import { Form } from "~/components/ui/form";
 import PaymentMethodSelect from "~/components/forms/payment-method-select";
 import RecipientSelect from "~/components/forms/recipient-select";
 import FormInput, { FormCurrencyInput } from "~/components/ui/input";
-import { useTransactionForm, type TransactionFormValues } from "./useForm";
+import {
+  useInstallmentPurchaseForm,
+  type InstallmentPurchaseFormValues,
+} from "./useForm";
 
-interface TransactionDialogProps {
+interface InstallmentPurchaseDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialData?: { id: string } & TransactionFormValues;
+  initialData?: { id: string } & InstallmentPurchaseFormValues;
 }
 
-export default function TransactionDialog({
+export default function InstallmentPurchaseDialog({
   open,
   onOpenChange,
   initialData,
-}: TransactionDialogProps) {
-  const { form, onSubmit, isLoading } = useTransactionForm(
+}: InstallmentPurchaseDialogProps) {
+  const { form, onSubmit, isLoading } = useInstallmentPurchaseForm(
     () => onOpenChange(false),
     initialData,
   );
@@ -37,7 +40,7 @@ export default function TransactionDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            {initialData ? "Editar despesa variável" : "Nova despesa variável"}
+            {initialData ? "Editar compra parcelada" : "Nova compra parcelada"}
           </DialogTitle>
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
