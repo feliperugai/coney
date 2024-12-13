@@ -1,9 +1,11 @@
 import {
-  CircleDollarSign,
+  BarChart2,
+  CreditCard,
+  DollarSign,
   Home,
-  List,
-  ListTree,
-  UserPlus,
+  Subtitles,
+  Tag,
+  Users,
   Wallet,
 } from "lucide-react";
 import { auth } from "~/server/auth";
@@ -35,7 +37,12 @@ export default async function AdminPanelLayout({
             {
               label: "Despesas variáveis",
               href: "/despesas-variaveis",
-              icon: <List className="mr-2 h-4 w-4" />,
+              icon: <BarChart2 className="mr-2 h-4 w-4" />,
+            },
+            {
+              label: "Compras parceladas",
+              href: "/compras-parceladas",
+              icon: <CreditCard className="mr-2 h-4 w-4" />,
             },
           ],
         },
@@ -45,17 +52,17 @@ export default async function AdminPanelLayout({
             {
               label: "Categorias",
               href: "/categorias",
-              icon: <List className="mr-2 h-4 w-4" />,
+              icon: <Tag className="mr-2 h-4 w-4" />,
             },
             {
               label: "Subcategorias",
               href: "/subcategorias",
-              icon: <ListTree className="mr-2 h-4 w-4" />,
+              icon: <Subtitles className="mr-2 h-4 w-4" />,
             },
             {
               label: "Beneficiários",
               href: "/beneficiarios",
-              icon: <UserPlus className="mr-2 h-4 w-4" />,
+              icon: <Users className="mr-2 h-4 w-4" />,
             },
             {
               label: "Meios de pagamento",
@@ -65,7 +72,7 @@ export default async function AdminPanelLayout({
             {
               label: "Renda",
               href: "/renda",
-              icon: <CircleDollarSign className="mr-2 h-4 w-4" />,
+              icon: <DollarSign className="mr-2 h-4 w-4" />,
             },
           ],
         },

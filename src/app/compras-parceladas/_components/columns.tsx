@@ -1,9 +1,9 @@
 import { ImageCell } from "~/components/ui/data-table/cells/image-cell";
 import CurrencyCell from "~/components/ui/data-table/cells/money-cell";
 import { type Column } from "~/components/ui/data-table/columns";
-import { type Transactions } from "~/server/api/routers/transactions";
+import { type InstallmentPurchases } from "~/server/api/routers/installment-purchases";
 
-export const columns: Column<Transactions[0]>[] = [
+export const columns: Column<InstallmentPurchases[0]>[] = [
   {
     accessorKey: "date",
     header: "Dia",
@@ -12,7 +12,7 @@ export const columns: Column<Transactions[0]>[] = [
   {
     accessorKey: "amount",
     header: "Valor",
-    cell: ({ row }) => <CurrencyCell value={row.original.amount} />,
+    cell: ({ row }) => <CurrencyCell value={row.original.installmentAmount} />,
   },
   {
     accessorKey: "paymentMethod.name",

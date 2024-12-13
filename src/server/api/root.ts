@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { accountsRouter } from "./routers/accounts";
 import { categoryRouter } from "./routers/category";
 import { incomeRouter } from "./routers/incomes";
+import { installmentPurchaseRouter } from "./routers/installment-purchases";
 import { paymentMethodRouter } from "./routers/payment-method";
 import { recipientRouter } from "./routers/recipients";
 import { subcategoryRouter } from "./routers/subcategory";
@@ -13,6 +14,7 @@ import { userRouter } from "./routers/user";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  installmentPurchases: installmentPurchaseRouter,
   category: categoryRouter,
   subcategory: subcategoryRouter,
   paymentMethod: paymentMethodRouter,

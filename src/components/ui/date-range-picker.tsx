@@ -74,12 +74,10 @@ interface Preset {
 // Define presets
 const PRESETS: Preset[] = [
   { name: "today", label: "Hoje" },
-  { name: "yesterday", label: "Ontem" },
   { name: "last7", label: "Últimos 7 dias" },
   { name: "last14", label: "Últimos 14 dias" },
   { name: "last30", label: "Últimos 30 dias" },
   { name: "thisWeek", label: "Esta semana" },
-  { name: "lastWeek", label: "Última semana" },
   { name: "thisMonth", label: "Este mês" },
   { name: "lastMonth", label: "Último mês" },
 ];
@@ -523,8 +521,8 @@ export function DateRangePicker({
             </div>
           </div>
           {!isSmallScreen && (
-            <div className="flex flex-col items-end gap-1 pb-6 pl-6 pr-2">
-              <div className="flex w-full flex-col items-end gap-1 pb-6 pl-6 pr-2">
+            <div className="flex flex-col items-end gap-1 pl-6 pr-2">
+              <div className="flex w-full flex-col items-end gap-1 pb-3 pl-6 pr-2">
                 {PRESETS.map((preset) => (
                   <PresetButton
                     key={preset.name}

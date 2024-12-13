@@ -2,15 +2,11 @@ import { and, eq, gte, inArray, lte } from "drizzle-orm";
 import { type z } from "zod";
 import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
 import { type Database } from "~/server/db";
-import { installments, transactions } from "~/server/db/schema";
+import { transactions } from "~/server/db/schema";
 import {
   type NewTransaction,
   type insertTransactionSchema,
 } from "~/server/db/tables/transactions";
-
-type CreateTransactionInput = NewTransaction & {
-  installmentCount?: number | null;
-};
 
 export class TransactionService {
   private db: Database;
@@ -19,48 +15,13 @@ export class TransactionService {
     this.db = db;
   }
 
-  async create(input: CreateTransactionInput) {
-    const { installmentCount, ...data } = input;
+  async create(data: NewTransaction) {
+    const [result] = await this.db
+      .insert(transactions)
+      .values(data)
+      .returning();
 
-    return this.db.transaction(async (tx) => {
-      const [transaction] = await tx
-        .insert(transactions)
-        .values(data)
-        .returning();
-
-      if (!transaction?.id) {
-        return tx.rollback();
-      }
-
-      if (installmentCount) {
-        const installmentAmount = parseFloat(data.amount) / installmentCount;
-
-        const [installment] = await tx
-          .insert(installments)
-          .values({
-            totalInstallments: installmentCount,
-            startDate: data.date,
-            endDate: this.calculateEndDate(data.date, installmentCount),
-            originalAmount: data.amount,
-            installmentAmount: installmentAmount.toString(),
-          })
-          .returning();
-        console.log({ installment });
-        if (!installment?.id) return tx.rollback();
-
-        for (let i = 1; i <= installmentCount; i++) {
-          await tx.insert(transactions).values({
-            ...data,
-            installmentId: installment.id,
-            installment: i,
-            amount: installmentAmount.toString(),
-            date: this.calculateInstallmentDate(data.date, i),
-          });
-        }
-      }
-
-      return transaction;
-    });
+    return result;
   }
 
   async update(
@@ -114,20 +75,5 @@ export class TransactionService {
       .from(transactions)
       .where(eq(transactions.id, id));
     return result[0];
-  }
-
-  private calculateEndDate(startDate: Date, totalInstallments: number): Date {
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + totalInstallments - 1);
-    return endDate;
-  }
-
-  private calculateInstallmentDate(
-    startDate: Date,
-    currentInstallment: number,
-  ): Date {
-    const date = new Date(startDate);
-    date.setMonth(date.getMonth() + currentInstallment - 1);
-    return date;
   }
 }
