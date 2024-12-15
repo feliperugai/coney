@@ -1,39 +1,51 @@
 import { and, eq, gte, inArray, lte } from "drizzle-orm";
+import { type User } from "next-auth";
 import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
 import { type Database } from "~/server/db";
 import { installmentPurchases } from "~/server/db/schema";
 import { type InsertInstallmentPurchase } from "~/server/db/tables/installmentsPurchases";
+import { type TRPCContext } from "../trpc";
 
 export class InstallmentPurchaseService {
   private db: Database;
+  private user: User;
 
-  constructor(db: Database) {
-    this.db = db;
+  constructor(ctx: TRPCContext) {
+    this.db = ctx.db;
+    this.user = ctx.session!.user;
   }
 
-  async create(data: InsertInstallmentPurchase) {
+  async create(dto: InsertInstallmentPurchase) {
+    const data = this.getUpsertData(dto);
+
+    const [result] = await this.db
+      .insert(installmentPurchases)
+      .values(data)
+      .returning();
+
+    return result;
+  }
+
+  getUpsertData(data: InsertInstallmentPurchase) {
     const { date, totalInstallments, amount: amountSt, ...rest } = data;
     const amount = parseFloat(amountSt);
     const startDate = new Date(date);
     const endDate = this.calculateEndDate(startDate, totalInstallments);
     const installmentAmount = amount / totalInstallments;
 
-    const [result] = await this.db
-      .insert(installmentPurchases)
-      .values({
-        ...rest,
-        originalAmount: (amount * totalInstallments).toString(),
-        totalInstallments,
-        startDate,
-        endDate,
-        installmentAmount,
-      })
-      .returning();
-
-    return result;
+    return {
+      ...rest,
+      originalAmount: (amount * totalInstallments).toString(),
+      installmentAmount: installmentAmount.toString(),
+      totalInstallments,
+      startDate,
+      endDate,
+    };
   }
 
-  async update(id: string, data: Partial<InsertInstallmentPurchase>) {
+  async update(id: string, input: InsertInstallmentPurchase) {
+    const data = this.getUpsertData(input);
+
     return this.db
       .update(installmentPurchases)
       .set(data)

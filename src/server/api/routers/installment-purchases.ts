@@ -11,7 +11,7 @@ export const installmentPurchaseRouter = createTRPCRouter({
   create: protectedProcedure
     .input(insertSchema)
     .mutation(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.create(input);
     }),
 
@@ -19,25 +19,25 @@ export const installmentPurchaseRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        data: insertSchema.partial(),
+        data: insertSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.update(input.id, input.data);
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.delete(input.id);
     }),
 
   deleteMany: protectedProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.deleteMany(input.ids);
     }),
 
@@ -51,14 +51,14 @@ export const installmentPurchaseRouter = createTRPCRouter({
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.getAll(input);
     }),
 
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const service = new InstallmentPurchaseService(ctx.db);
+      const service = new InstallmentPurchaseService(ctx);
       return service.getById(input.id);
     }),
 });

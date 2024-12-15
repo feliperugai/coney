@@ -1,6 +1,6 @@
 "use client";
 
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
@@ -22,7 +22,11 @@ function getInstallment(
   if (!data) return undefined;
   const found = data.find((cat) => cat.id === id);
   return found
-    ? { ...found, amount: parseFloat(found.installmentAmount) }
+    ? {
+        ...found,
+        amount: parseFloat(found.installmentAmount),
+        date: found.startDate,
+      }
     : undefined;
 }
 
@@ -30,7 +34,7 @@ export default function InstallmentsPage() {
   const [id, setId] = useQueryState("id");
   const [range, setRange] = useState<DateRange>({
     from: getStartOfMonth(),
-    to: new Date(),
+    to: add(new Date(), { years: 1 }),
   });
 
   const { data, isLoading } = api.installmentPurchases.getAll.useQuery({
@@ -47,8 +51,8 @@ export default function InstallmentsPage() {
         <h1 className="text-2xl font-bold">Compras parceladas</h1>
         <DateRangePicker
           onUpdate={({ range }) => setRange(range)}
-          initialDateFrom={getStartOfMonth()}
-          initialDateTo={new Date()}
+          initialDateFrom={range.from}
+          initialDateTo={range.to}
           align="start"
           locale="pt-BR"
           showCompare={false}

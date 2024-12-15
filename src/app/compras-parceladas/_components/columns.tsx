@@ -5,9 +5,14 @@ import { type InstallmentPurchases } from "~/server/api/routers/installment-purc
 
 export const columns: Column<InstallmentPurchases[0]>[] = [
   {
-    accessorKey: "date",
-    header: "Dia",
-    date: "dd",
+    accessorKey: "startDate",
+    header: "Primeira",
+    date: "dd/MM/yy",
+  },
+  {
+    accessorKey: "endDate",
+    header: "Última",
+    date: "dd/MM/yy",
   },
   {
     accessorKey: "amount",

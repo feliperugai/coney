@@ -99,9 +99,8 @@ export function FormAutoComplete({
       control={form.control}
       name={name}
       render={({ field, fieldState: { error } }) => {
-        const option = items.find((option) => option.value === field.value);
+        const option = items.find((option) => option.value == field.value);
         const displayText = field.value ? option?.label : triggerText;
-
         return (
           <FormItem className={cn("flex flex-col space-y-3 pt-1.5", className)}>
             {label && <FormLabel>{label}</FormLabel>}
@@ -165,7 +164,7 @@ export function FormAutoComplete({
                           <span>{displayText}</span>
                         </div>
                         {loading ? (
-                          <Spinner className="h-6 w-6 fill-cyan-500" />
+                          <Spinner className="h-6 w-6" />
                         ) : (
                           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         )}

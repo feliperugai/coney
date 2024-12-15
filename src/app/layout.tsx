@@ -4,13 +4,15 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "~/app/api/uploadthing/core";
 import AdminPanelLayout from "~/components/layout/menu";
 import { ThemeProvider } from "~/components/ui/theme-provider";
+import { auth } from "~/server/auth";
 import { TRPCReactProvider } from "~/trpc/react";
-import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -18,9 +20,10 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
@@ -46,9 +49,11 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <AdminPanelLayout>
-                {children} <Toaster richColors />
-              </AdminPanelLayout>
+              <SessionProvider session={session}>
+                <AdminPanelLayout>
+                  {children} <Toaster richColors />
+                </AdminPanelLayout>
+              </SessionProvider>
             </ThemeProvider>
           </NuqsAdapter>
         </TRPCReactProvider>

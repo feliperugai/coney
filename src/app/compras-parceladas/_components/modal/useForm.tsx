@@ -2,6 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,13 +13,15 @@ import { api } from "~/trpc/react";
 
 const scheam = z.object({
   date: z.coerce.date(),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).max(255).optional().nullable(),
   amount: currency(),
-  paymentMethodId: z.string().uuid().optional().nullable(),
+  paymentMethodId: z.string().uuid(),
+  totalInstallments: z.coerce.number().min(1).max(100),
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
   newRecipient: z.string().optional().nullable(),
+  userId: z.string().uuid(),
 });
 
 export type InstallmentPurchaseFormValues = z.infer<typeof scheam>;
@@ -32,6 +35,7 @@ export function useInstallmentPurchaseForm(
   closeModal: () => void,
   initialData?: { id: string } & InstallmentPurchaseFormValues,
 ) {
+  const session = useSession();
   const { createInstallmentPurchase, isCreating } =
     useCreateInstallmentPurchase({
       onSuccess: closeModal,
@@ -93,6 +97,7 @@ export function useInstallmentPurchaseForm(
     } else {
       form.reset({
         date: getDate(),
+        userId: session?.data?.user?.id,
       });
     }
   }, [initialData]);

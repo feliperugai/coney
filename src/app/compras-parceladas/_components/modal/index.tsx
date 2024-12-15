@@ -11,9 +11,12 @@ import {
 } from "~/components/ui/dialog";
 import { Form } from "~/components/ui/form";
 
+import InstallmentsSelect from "~/components/forms/installments-select";
 import PaymentMethodSelect from "~/components/forms/payment-method-select";
 import RecipientSelect from "~/components/forms/recipient-select";
+import UsersSelect from "~/components/forms/users-select";
 import FormInput, { FormCurrencyInput } from "~/components/ui/input";
+import InstallmentInfo from "./info";
 import {
   useInstallmentPurchaseForm,
   type InstallmentPurchaseFormValues,
@@ -37,7 +40,7 @@ export default function InstallmentPurchaseDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             {initialData ? "Editar compra parcelada" : "Nova compra parcelada"}
@@ -45,6 +48,7 @@ export default function InstallmentPurchaseDialog({
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
           <div className="flex flex-col gap-6">
+            <UsersSelect name="userId" label="Usuário" />
             <div className="flex items-center gap-4">
               <FormInput
                 containerClassName="flex-1"
@@ -57,14 +61,22 @@ export default function InstallmentPurchaseDialog({
               />
 
               <FormCurrencyInput
-                containerClassName="flex-1"
+                containerClassName="flex-2"
                 name="amount"
-                label="Valor"
+                label="Valor total"
                 placeholder="Ex: 1500.00"
                 disabled={isLoading}
                 required
               />
+
+              <InstallmentsSelect
+                className="flex-1"
+                name="totalInstallments"
+                label="Parcelas"
+              />
             </div>
+
+            <InstallmentInfo />
 
             <div className="flex items-center gap-4">
               <RecipientSelect

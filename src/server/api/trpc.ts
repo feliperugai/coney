@@ -7,12 +7,13 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC, TRPCError } from "@trpc/server";
+import { inferRouterContext, initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { AppRouter } from "./root";
 
 /**
  * 1. CONTEXT
@@ -43,6 +44,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
+
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
@@ -56,6 +58,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     };
   },
 });
+
+export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
 
 /**
  * Create a server-side caller.

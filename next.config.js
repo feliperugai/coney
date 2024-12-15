@@ -18,6 +18,11 @@ const config = {
         hostname: "utfs.io",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.discordapp.com",
+        pathname: "**",
+      },
     ],
   },
 };

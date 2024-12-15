@@ -10,6 +10,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import {
@@ -17,6 +18,7 @@ import {
   paymentMethods,
   recipients,
   subcategories,
+  users,
 } from "../schema";
 import { transactions } from "./transactions";
 
@@ -29,9 +31,9 @@ export const installmentPurchases = pgTable("installment_purchases", {
   categoryId: uuid("category_id").references(() => categories.id),
   subcategoryId: uuid("subcategory_id").references(() => subcategories.id),
   recipientId: uuid("recipient_id").references(() => recipients.id),
-  paymentMethodId: uuid("payment_method_id").references(
-    () => paymentMethods.id,
-  ),
+  paymentMethodId: uuid("payment_method_id")
+    .references(() => paymentMethods.id)
+    .notNull(),
   originalAmount: numeric("original_amount", {
     precision: 10,
     scale: 2,
@@ -40,6 +42,9 @@ export const installmentPurchases = pgTable("installment_purchases", {
     precision: 10,
     scale: 2,
   }).notNull(),
+  userId: varchar("user_id")
+    .notNull()
+    .references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -48,6 +53,10 @@ export const installmentRelations = relations(
   installmentPurchases,
   ({ many, one }) => ({
     transactions: many(transactions),
+    user: one(users, {
+      fields: [installmentPurchases.userId],
+      references: [users.id],
+    }),
     category: one(categories, {
       fields: [installmentPurchases.categoryId],
       references: [categories.id],
@@ -75,7 +84,7 @@ export type NewInstallmentPurchase = InferInsertModel<
 export const insertSchema = z.object({
   totalInstallments: z.number().min(1).max(100),
   date: z.date(),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).max(255).optional().nullable(),
   amount: z
     .number()
     .positive()
@@ -84,6 +93,7 @@ export const insertSchema = z.object({
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
+  userId: z.string().uuid(),
 });
 
 export type InsertInstallmentPurchase = z.infer<typeof insertSchema>;
