@@ -1,9 +1,7 @@
-// ~/server/db/schema/goals.ts
 import {
   type InferInsertModel,
   type InferSelectModel,
   relations,
-  sql,
 } from "drizzle-orm";
 import {
   numeric,

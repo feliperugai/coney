@@ -4,7 +4,7 @@ import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
 import { type Database } from "~/server/db";
 import { installmentPurchases } from "~/server/db/schema";
 import { type InsertInstallmentPurchase } from "~/server/db/tables/installmentsPurchases";
-import { type TRPCContext } from "../trpc";
+import { type TRPCContext } from "../api/trpc";
 
 export class InstallmentPurchaseService {
   private db: Database;
