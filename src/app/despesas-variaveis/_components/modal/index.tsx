@@ -15,6 +15,7 @@ import PaymentMethodSelect from "~/components/forms/payment-method-select";
 import RecipientSelect from "~/components/forms/recipient-select";
 import FormInput, { FormCurrencyInput } from "~/components/ui/input";
 import { useTransactionForm, type TransactionFormValues } from "./useForm";
+import UsersSelect from "~/components/forms/users-select";
 
 interface TransactionDialogProps {
   open: boolean;
@@ -42,6 +43,7 @@ export default function TransactionDialog({
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
           <div className="flex flex-col gap-6">
+            <UsersSelect name="userId" label="Usuário" />
             <div className="flex items-center gap-4">
               <FormInput
                 containerClassName="flex-1"

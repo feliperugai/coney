@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
-import { paymentMethods } from "../schema";
+import { paymentMethods, users } from "../schema";
 import { categories } from "./categories";
 import { recipients } from "./recipients";
 import { subcategories } from "./subcategories";
@@ -28,10 +28,15 @@ export const transactions = pgTable("transaction", {
     () => paymentMethods.id,
   ),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  userId: varchar("user_id").references(() => users.id),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const transactionRelations = relations(transactions, ({ one }) => ({
+  user: one(users, {
+    fields: [transactions.userId],
+    references: [users.id],
+  }),
   category: one(categories, {
     fields: [transactions.categoryId],
     references: [categories.id],
@@ -64,4 +69,5 @@ export const insertTransactionSchema = z.object({
   categoryId: z.string().uuid().optional().nullable(),
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
+  userId: z.string().uuid().optional().nullable(),
 });

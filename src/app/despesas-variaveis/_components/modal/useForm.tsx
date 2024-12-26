@@ -2,6 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,6 +20,7 @@ const transactionFormSchema = z.object({
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
   newRecipient: z.string().optional().nullable(),
+  userId: z.string().uuid(),
 });
 
 export type TransactionFormValues = z.infer<typeof transactionFormSchema>;
@@ -32,6 +34,7 @@ export function useTransactionForm(
   closeModal: () => void,
   initialData?: { id: string } & TransactionFormValues,
 ) {
+  const session = useSession();
   const { createTransaction, isCreating } = useCreateTransaction({
     onSuccess: closeModal,
   });
@@ -79,6 +82,7 @@ export function useTransactionForm(
     resolver: zodResolver(transactionFormSchema),
     defaultValues: initialData ?? {
       date: getDate(),
+      userId: session?.data?.user?.id,
     },
   });
 
@@ -91,6 +95,7 @@ export function useTransactionForm(
     } else {
       form.reset({
         date: getDate(),
+        userId: session?.data?.user?.id,
       });
     }
   }, [initialData]);
