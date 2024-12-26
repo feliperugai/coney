@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { insertTransactionSchema } from "~/server/db/tables/transactions";
-import { TransactionService } from "../services/transaction-service";
+
+import { TransactionService } from "~/server/services/transaction-service";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export type Transactions = Awaited<

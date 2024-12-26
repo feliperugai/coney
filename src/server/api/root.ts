@@ -8,12 +8,14 @@ import { recipientRouter } from "./routers/recipients";
 import { subcategoryRouter } from "./routers/subcategory";
 import { transactionRouter } from "./routers/transactions";
 import { userRouter } from "./routers/user";
+import { goalsRouter } from "./routers/goal";
 /**
  * This is the primary router for your server.
  *
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  goal: goalsRouter,
   installmentPurchases: installmentPurchaseRouter,
   category: categoryRouter,
   subcategory: subcategoryRouter,

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { insertSchema } from "~/server/db/tables/installmentsPurchases";
-import { InstallmentPurchaseService } from "../services/installment-service";
+
+import { InstallmentPurchaseService } from "~/server/services/installment-service";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export type InstallmentPurchases = Awaited<

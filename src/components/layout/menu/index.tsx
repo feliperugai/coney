@@ -29,6 +29,11 @@ export default async function AdminPanelLayout({
               href: "/",
               icon: <Home className="mr-2 h-4 w-4" />,
             },
+            {
+              label: "Metas",
+              href: "/metas",
+              icon: <Tag className="mr-2 h-4 w-4" />,
+            },
           ],
         },
         {

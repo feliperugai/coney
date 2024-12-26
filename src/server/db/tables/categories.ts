@@ -7,6 +7,7 @@ import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { recipients } from "./recipients";
 import { subcategories } from "./subcategories";
+import { goals } from "./goals";
 
 export const categories = pgTable("category", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -19,6 +20,7 @@ export const categories = pgTable("category", {
 export const categoriesRelations = relations(categories, ({ many }) => ({
   subcategories: many(subcategories),
   recipients: many(recipients),
+  goals: many(goals),
 }));
 
 // Tipos inferidos do Drizzle

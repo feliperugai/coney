@@ -6,6 +6,7 @@ import {
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { categories, type Category } from "./categories";
+import { goals } from "./goals";
 
 export const subcategories = pgTable("subcategory", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -18,12 +19,16 @@ export const subcategories = pgTable("subcategory", {
     .references(() => categories.id),
 });
 
-export const subcategoriesRelations = relations(subcategories, ({ one }) => ({
-  category: one(categories, {
-    fields: [subcategories.categoryId],
-    references: [categories.id],
+export const subcategoriesRelations = relations(
+  subcategories,
+  ({ one, many }) => ({
+    category: one(categories, {
+      fields: [subcategories.categoryId],
+      references: [categories.id],
+    }),
+    goals: many(goals),
   }),
-}));
+);
 
 // Tipos inferidos do Drizzle
 export type Subcategory = InferSelectModel<typeof subcategories> & {

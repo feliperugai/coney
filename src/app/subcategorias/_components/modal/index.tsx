@@ -46,7 +46,7 @@ export default function SubcategoryDialog({
       <DialogContent aria-describedby="Nova subcategoria">
         <DialogHeader>
           <DialogTitle>
-            {initialData ? "Editar Categoria" : "Nova Categoria"}
+            {initialData ? "Editar subcategoria" : "Nova Subcategoria"}
           </DialogTitle>
         </DialogHeader>
         <Form onSubmit={onSubmit} {...form}>
