@@ -15,8 +15,8 @@ const recipientFormSchema = z.object({
     .max(50, { message: "O nome deve ter no máximo 50 caracteres" }),
   color: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
-  categoryId: z.string().uuid(),
-  subcategoryId: z.string().uuid(),
+  categoryId: z.string().uuid().optional().nullable(),
+  subcategoryId: z.string().uuid().optional().nullable(),
   image: z.string().optional().nullable(),
 });
 

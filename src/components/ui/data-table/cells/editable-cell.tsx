@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-
 type Option = {
   label: string;
   value: string;
@@ -36,6 +35,7 @@ type EditCellProps<T> = {
 };
 
 type TableMetaType<T> = {
+  type?: T;
   editedRows: Record<string, boolean>;
   setEditedRows: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   revertData: (rowIndex: number, revert: boolean) => void;

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
+import { cn } from "~/lib/utils";
 import {
   FormControl,
   FormDescription,
@@ -14,9 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./form";
-
-import { unknown } from "zod";
-import { cn } from "~/lib/utils";
 import RequiredInput from "./required-input";
 import { Spinner } from "./spinner";
 

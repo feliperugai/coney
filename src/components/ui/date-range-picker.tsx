@@ -90,7 +90,6 @@ export function DateRangePicker({
   initialCompareTo,
   onUpdate,
   align = "end",
-  locale = "en-US",
   showCompare = true,
 }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = useState(false);

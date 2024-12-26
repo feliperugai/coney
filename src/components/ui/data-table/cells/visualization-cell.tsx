@@ -1,7 +1,3 @@
-import {
-  type CellContext,
-  type ColumnDefTemplate,
-} from "@tanstack/react-table";
 import Image from "next/image";
 import { useState } from "react";
 import { Center } from "~/components/ui/center";

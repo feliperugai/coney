@@ -1,4 +1,3 @@
-import { type inferRouterContext } from "@trpc/server";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { accountsRouter } from "./routers/accounts";
 import { categoryRouter } from "./routers/category";

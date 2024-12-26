@@ -20,7 +20,7 @@ const transactionFormSchema = z.object({
   subcategoryId: z.string().uuid().optional().nullable(),
   recipientId: z.string().uuid().optional().nullable(),
   newRecipient: z.string().optional().nullable(),
-  userId: z.string().uuid(),
+  userId: z.string().uuid().optional().nullable(),
 });
 
 export type TransactionFormValues = z.infer<typeof transactionFormSchema>;

@@ -1,22 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { type ClientUploadedFileData } from "uploadthing/types";
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Spinner } from "~/components/ui/spinner";
-import { UploadDropzone, useUploadThing } from "~/components/uploadthing";
-
-interface BrandLogo {
-  claimed: boolean;
-  brandId: string;
-  name: string;
-  domain: string;
-  icon: string;
-  score: number;
-  qualityScore: number;
-  verified: boolean;
-}
+import { UploadDropzone } from "~/components/uploadthing";
 
 interface UploadModalProps {
   open: boolean;

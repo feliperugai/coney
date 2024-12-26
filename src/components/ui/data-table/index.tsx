@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns: getColumns(
-      //@ts-expect-error Nem ideia de como resolver esse erro
+      //@ts-ignore Nem ideia de como resolver esse erro
       enableRowSelection
         ? [CheckboxCell as ColumnDef<TData>, ...columns]
         : columns,

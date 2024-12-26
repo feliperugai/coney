@@ -1,4 +1,5 @@
-// global.d.ts ou em um arquivo de declaração de tipos
+// eslint-disable @typescript-eslint/no-unused-vars
+
 import * as ReactTable from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
