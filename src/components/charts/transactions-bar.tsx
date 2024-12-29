@@ -1,9 +1,10 @@
 "use client";
 
 import { CalendarDays, CalendarRange } from "lucide-react";
-import Image from "next/image";
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, XAxis } from "recharts";
+import { Toggle } from "~/components/ui/toggle";
+
 import {
   Card,
   CardContent,
@@ -17,14 +18,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
-import { ImageCell } from "~/components/ui/data-table/cells/image-cell";
-import { Toggle } from "~/components/ui/toggle";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
 import { format } from "~/lib/currency";
 import { getAllDaysInMonth } from "~/lib/date";
 import { api } from "~/trpc/react";
@@ -108,15 +101,15 @@ export default function Component() {
   if (!data) return <div>Nenhum dado encontrado</div>;
 
   const chartConfig = {
-    ...data.paymentMethods.reduce((acc, method, i) => {
-      acc[method.name] = {
-        label: method.name,
-        color: method.color ?? `hsl(var(--chart-${i + 1}))`,
+    ...data.paymentMethods.reduce((acc, curr, i) => {
+      acc[curr.name] = {
+        label: curr.name,
+        color: `hsl(var(--chart-${i + 1}))`,
       };
       return acc;
     }, {} as ChartConfig),
     [ALL_METHODS]: {
-      label: "Total",
+      label: "Todos",
       color: "hsl(var(--primary))",
     },
   };
@@ -152,35 +145,22 @@ export default function Component() {
             className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
             onClick={() => setActiveChart(ALL_METHODS)}
           >
-            <span className="text-xs text-muted-foreground">Total</span>
+            <span className="text-xs text-muted-foreground">Todos</span>
             <span className="text-lg font-bold leading-none sm:text-3xl">
               {format(totals[ALL_METHODS] ?? 0)}
             </span>
           </button>
-          {data?.paymentMethods.map(({ color, image, name }) => (
+          {data?.paymentMethods.map(({ name }) => (
             <button
               key={name}
               data-active={activeChart === name}
-              className="relative z-30 flex flex-1 items-center gap-2 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+              className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
               onClick={() => setActiveChart(name)}
             >
-              {image && (
-                <div className="size-7 flex-1">
-                  <Image
-                    src={image}
-                    width={28}
-                    height={28}
-                    className="rounded-md"
-                    alt={"Visualização"}
-                  />
-                </div>
-              )}
-              <div className="flex flex-col justify-center">
-                <span className="text-xs text-muted-foreground">{name}</span>
-                <span className="text-lg font-bold leading-none sm:text-3xl">
-                  {format(totals[name] ?? 0)}
-                </span>
-              </div>
+              <span className="text-xs text-muted-foreground">{name}</span>
+              <span className="text-lg font-bold leading-none sm:text-3xl">
+                {format(totals[name] ?? 0)}
+              </span>
             </button>
           ))}
         </div>
@@ -232,7 +212,7 @@ export default function Component() {
               }
             />
             {activeChart === ALL_METHODS
-              ? data.paymentMethods.map(({ name }, index) => (
+              ? data.paymentMethods.map(({ name }) => (
                   <Bar
                     key={name}
                     dataKey={`amounts.${name}`}
@@ -256,47 +236,10 @@ export default function Component() {
                     }
                   />
                 )}
-            {activeChart === ALL_METHODS && (
-              <Legend content={<CustomLegend />} />
-            )}
+            {activeChart === ALL_METHODS && <Legend />}
           </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
 }
-
-// Componente customizado para a legenda
-const CustomLegend = (props: any) => {
-  console.log({ props });
-  if (!props) return null;
-
-  return (
-    <div className="mt-4 flex flex-wrap justify-center gap-4">
-      {props.payload.map((entry) => (
-        <TooltipProvider key={entry.value}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex cursor-pointer items-center gap-2">
-                <div
-                  className="size-3 rounded-sm"
-                  style={{ backgroundColor: entry.color }}
-                />
-                <span className="text-sm">{entry.value}</span>
-              </div>
-            </TooltipTrigger>
-            {entry.payload?.image && (
-              <TooltipContent>
-                <img
-                  src={entry.payload.image}
-                  alt={entry.value}
-                  className="h-8 w-8 object-contain"
-                />
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
-      ))}
-    </div>
-  );
-};

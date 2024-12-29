@@ -28,3 +28,14 @@ export function getEndOfMonth(date?: Date) {
     ),
   );
 }
+
+export function getAllDaysInMonth(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const days = new Date(year, month + 1, 0).getDate();
+
+  return Array.from({ length: days }, (_, i) => {
+    const day = new Date(year, month, i + 1);
+    return day.toISOString().split("T")[0]!;
+  });
+}

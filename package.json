@@ -63,6 +63,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
+    "recharts": "^2.15.0",
     "server-only": "^0.0.1",
     "sonner": "^1.7.1",
     "superjson": "^2.2.2",
@@ -96,7 +97,8 @@
   "pnpm": {
     "overrides": {
       "@types/react": "19.0.2",
-      "@types/react-dom": "19.0.2"
+      "@types/react-dom": "19.0.2",
+      "react-is": "^19.0.0-rc-69d4b800-20241021"
     }
   }
 }
