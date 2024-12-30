@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.1] - 2024-12-30
+### :bug: Bug Fixes
+- [`025c195`](https://github.com/feliperugai/coney/commit/025c195ac47507fdc78adbf2e7380230e40768fe) - correct DockerHub username secret in release workflow configuration *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+
 ## [v0.1.0] - 2024-12-30
 ### :sparkles: New Features
 - [`551d0e7`](https://github.com/feliperugai/coney/commit/551d0e70941d996d7634757ac5fe4084da534bd1) - update .dockerignore to include additional config files and environment variables *(commit by [@feliperugai](https://github.com/feliperugai))*
@@ -15,3 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [v0.0.2]: https://github.com/feliperugai/coney/compare/v0.0.1...v0.0.2
 [v0.1.0]: https://github.com/feliperugai/coney/compare/v0.0.2...v0.1.0
+[v0.1.1]: https://github.com/feliperugai/coney/compare/v0.1.0...v0.1.1
