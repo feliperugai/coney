@@ -26,11 +26,16 @@ import {
 } from "~/components/ui/tooltip";
 import { format } from "~/lib/currency";
 import { getAllDaysInMonth } from "~/lib/date";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 const ALL_METHODS = "all";
 
-export default function TransactionsByDate({ className }: { className?: string }) {
+export default function TransactionsByDate({
+  className,
+}: {
+  className?: string;
+}) {
   const [activeChart, setActiveChart] = React.useState(ALL_METHODS);
   const [showAllDays, setShowAllDays] = React.useState(true);
   const { data, isLoading } = api.reports.getAll.useQuery();
@@ -121,15 +126,12 @@ export default function TransactionsByDate({ className }: { className?: string }
   };
 
   return (
-    <Card className={className}>
+    <Card className={cn(className, "@container")}>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Despesas variáveis</CardTitle>
-              <CardDescription>
-                Definidas por método de pagamento
-              </CardDescription>
             </div>
             <Toggle
               aria-label="Mostrar todos os dias"
@@ -148,11 +150,11 @@ export default function TransactionsByDate({ className }: { className?: string }
         <div className="flex">
           <button
             data-active={activeChart === ALL_METHODS}
-            className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+            className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-4 py-3 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
             onClick={() => setActiveChart(ALL_METHODS)}
           >
-            <span className="text-xs text-muted-foreground">Total</span>
-            <span className="text-lg font-bold leading-none sm:text-3xl">
+            <span className="text-[10px] text-muted-foreground">Total</span>
+            <span className="text-sm font-bold leading-none @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl transition-all">
               {format(totals[ALL_METHODS] ?? 0)}
             </span>
           </button>
@@ -160,11 +162,11 @@ export default function TransactionsByDate({ className }: { className?: string }
             <button
               key={name}
               data-active={activeChart === name}
-              className="relative z-30 flex flex-1 items-center gap-2 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+              className="relative z-30 flex flex-1 items-center gap-2 border-t px-4 py-3 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
               onClick={() => setActiveChart(name)}
             >
               {image && (
-                <div className="size-7 flex-1">
+                <div className="size-6 flex-none @[886px]:size-7">
                   <Image
                     src={image}
                     width={28}
@@ -175,8 +177,10 @@ export default function TransactionsByDate({ className }: { className?: string }
                 </div>
               )}
               <div className="flex flex-col justify-center">
-                <span className="text-xs text-muted-foreground">{name}</span>
-                <span className="text-lg font-bold leading-none sm:text-3xl">
+                <span className="text-[10px] text-muted-foreground">
+                  {name}
+                </span>
+                <span className="text-sm font-bold leading-none @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl transition-all">
                   {format(totals[name] ?? 0)}
                 </span>
               </div>
