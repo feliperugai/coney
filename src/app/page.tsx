@@ -17,7 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
-import { ImageCell } from "~/components/ui/data-table/cells/image-cell";
 import { Toggle } from "~/components/ui/toggle";
 import {
   Tooltip,
@@ -157,7 +156,7 @@ export default function Component() {
               {format(totals[ALL_METHODS] ?? 0)}
             </span>
           </button>
-          {data?.paymentMethods.map(({ color, image, name }) => (
+          {data?.paymentMethods.map(({ image, name }) => (
             <button
               key={name}
               data-active={activeChart === name}
@@ -232,7 +231,7 @@ export default function Component() {
               }
             />
             {activeChart === ALL_METHODS
-              ? data.paymentMethods.map(({ name }, index) => (
+              ? data.paymentMethods.map(({ name }) => (
                   <Bar
                     key={name}
                     dataKey={`amounts.${name}`}
@@ -273,7 +272,7 @@ const CustomLegend = (props: any) => {
 
   return (
     <div className="mt-4 flex flex-wrap justify-center gap-4">
-      {props.payload.map((entry) => (
+      {props.payload.map((entry: any) => (
         <TooltipProvider key={entry.value}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -287,10 +286,12 @@ const CustomLegend = (props: any) => {
             </TooltipTrigger>
             {entry.payload?.image && (
               <TooltipContent>
-                <img
+                <Image
                   src={entry.payload.image}
                   alt={entry.value}
-                  className="h-8 w-8 object-contain"
+                  height={16}
+                  width={16}
+                  className="size-4 rounded-md object-contain"
                 />
               </TooltipContent>
             )}
