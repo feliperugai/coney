@@ -3,14 +3,9 @@
 import { CalendarDays, CalendarRange } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
+import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -28,6 +23,8 @@ import { format } from "~/lib/currency";
 import { getAllDaysInMonth } from "~/lib/date";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { Separator } from "../ui/separator";
+import { GoalsChart } from "./goals/goal";
 
 const ALL_METHODS = "all";
 
@@ -36,12 +33,12 @@ export default function TransactionsByDate({
 }: {
   className?: string;
 }) {
-  const [activeChart, setActiveChart] = React.useState(ALL_METHODS);
-  const [showAllDays, setShowAllDays] = React.useState(true);
+  const [activeChart, setActiveChart] = useState(ALL_METHODS);
+  const [showAllDays, setShowAllDays] = useState(true);
   const { data, isLoading } = api.reports.getAll.useQuery();
 
   // Agrupa transações por data e opcionalmente inclui todos os dias do mês
-  const groupedData = React.useMemo(() => {
+  const groupedData = useMemo(() => {
     if (!data) return [];
 
     // Criar um Map com as datas como chaves
@@ -92,7 +89,7 @@ export default function TransactionsByDate({
     );
   }, [data, showAllDays]);
 
-  const totals = React.useMemo(() => {
+  const totals = useMemo(() => {
     if (!data) return {};
 
     const methodTotals = data.transactions.reduce(
@@ -154,7 +151,7 @@ export default function TransactionsByDate({
             onClick={() => setActiveChart(ALL_METHODS)}
           >
             <span className="text-[10px] text-muted-foreground">Total</span>
-            <span className="text-sm font-bold leading-none @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl transition-all">
+            <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
               {format(totals[ALL_METHODS] ?? 0)}
             </span>
           </button>
@@ -180,7 +177,7 @@ export default function TransactionsByDate({
                 <span className="text-[10px] text-muted-foreground">
                   {name}
                 </span>
-                <span className="text-sm font-bold leading-none @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl transition-all">
+                <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
                   {format(totals[name] ?? 0)}
                 </span>
               </div>
@@ -264,6 +261,13 @@ export default function TransactionsByDate({
             )}
           </BarChart>
         </ChartContainer>
+
+        <Separator className="mb-4 mt-10" />
+
+        <CardHeader className="px-0">
+          <CardTitle>Metas</CardTitle>
+        </CardHeader>
+        <GoalsChart />
       </CardContent>
     </Card>
   );

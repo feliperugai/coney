@@ -1,19 +1,13 @@
 import { and, gte, lte } from "drizzle-orm";
 import { type Database } from "~/server/db";
 import { transactions } from "../db/schema";
-
-type ReportFilter = {
-  id: string;
-  name: string;
-  image?: string | null;
-  color?: string | null;
-};
+import { goals, type Goal } from "../db/tables/goals";
 
 export class ReportService {
   constructor(private readonly db: Database) {}
 
   async getAll(start: Date, end: Date) {
-    const result = await this.db.query.transactions.findMany({
+    const data = await this.db.query.transactions.findMany({
       columns: { date: true, amount: true },
       with: {
         user: {
@@ -32,6 +26,18 @@ export class ReportService {
       orderBy: (transactions, { asc }) => asc(transactions.date),
     });
 
+    const result = this.mapResults(data);
+
+    const goalsWithProgress = await this.calculateGoals(
+      result.transactions,
+      start,
+      end,
+    );
+
+    return { ...result, goals: goalsWithProgress };
+  }
+
+  mapResults(result: ReportSqlDto[]) {
     const categories = new Map<
       string,
       ReportFilter & { subcategories: ReportFilter[] }
@@ -39,32 +45,35 @@ export class ReportService {
     const subcategories = new Set<string>();
     const recipients = new Set<string>();
     const paymentMethods = new Map<string, ReportFilter>();
+    const transactions: ReportSqlResult[] = [];
 
-    result.forEach((transaction) => {
-      if (transaction.category?.name) {
-        categories.set(transaction.category.name, {
-          ...transaction.category,
+    for (const item of result) {
+      transactions.push({
+        ...item,
+        amount: parseFloat(item.amount),
+      });
+      if (item.category?.name) {
+        categories.set(item.category.name, {
+          ...item.category,
           subcategories: [],
         });
       }
 
-      if (transaction.recipient?.name)
-        recipients.add(transaction.recipient.name);
+      if (item.recipient?.name) {
+        recipients.add(item.recipient.name);
+      }
 
-      if (transaction.subcategory?.name) {
-        subcategories.add(transaction.subcategory.name);
-        categories.get(transaction.category!.name)?.subcategories.push({
-          ...transaction.subcategory,
+      if (item.subcategory?.name) {
+        subcategories.add(item.subcategory.name);
+        categories.get(item.category!.name)?.subcategories.push({
+          ...item.subcategory,
         });
       }
 
-      if (transaction.paymentMethod?.name) {
-        paymentMethods.set(
-          transaction.paymentMethod.id,
-          transaction.paymentMethod,
-        );
+      if (item.paymentMethod?.name) {
+        paymentMethods.set(item.paymentMethod.id, item.paymentMethod);
       }
-    });
+    }
 
     return {
       transactions: result.map((transaction) => ({
@@ -77,4 +86,69 @@ export class ReportService {
       paymentMethods: Array.from(paymentMethods.values()),
     };
   }
+
+  async calculateGoals(
+    transactions: ReportSqlResult[],
+    start: Date,
+    end: Date,
+  ) {
+    const data = await this.db.query.goals.findMany({
+      with: {
+        category: { columns: { id: true, name: true } },
+        subcategory: { columns: { id: true, name: true } },
+      },
+      where: and(gte(goals.startDate, start), lte(goals.endDate, end)),
+    });
+
+    return data.map((goal) => {
+      const relevantTransactions = transactions.filter((transaction) => {
+        const matchesCategory =
+          goal.categoryId && transaction.category?.id === goal.categoryId;
+        const matchesSubcategory =
+          goal.subcategoryId &&
+          transaction.subcategory?.id === goal.subcategoryId;
+
+        const isWithinDateRange =
+          transaction.date >= goal.startDate &&
+          transaction.date <= goal.endDate;
+
+        return (matchesCategory ?? matchesSubcategory) && isWithinDateRange;
+      });
+
+      const totalSpent = relevantTransactions.reduce(
+        (sum, transaction) => sum + transaction.amount,
+        0,
+      );
+
+      const progress = (totalSpent / parseFloat(goal.amount)) * 100;
+
+      return {
+        ...goal,
+        displayName: goal.category?.name ?? goal.subcategory?.name ?? "?",
+        totalSpent,
+        progress,
+        reached: progress >= 100,
+      };
+    });
+  }
 }
+
+type ReportFilter = {
+  id: string;
+  name: string;
+  image?: string | null;
+  color?: string | null;
+};
+
+type ReportSqlDto = {
+  date: Date;
+  amount: string;
+  paymentMethod?: ReportFilter | null;
+  category?: ReportFilter | null;
+  subcategory?: ReportFilter | null;
+  recipient?: ReportFilter | null;
+};
+
+type ReportSqlResult = Omit<ReportSqlDto, "amount"> & {
+  amount: number;
+};

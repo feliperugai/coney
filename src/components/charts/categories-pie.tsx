@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Button } from "~/components/ui/button";
 import {
@@ -12,65 +12,9 @@ import {
 import { format } from "~/lib/currency";
 import { api } from "~/trpc/react";
 
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Subcategory {
-  id: string;
-  name: string;
-}
-
-interface Transaction {
-  amount: number;
-  category?: Category;
-  subcategory?: Subcategory;
-}
-
-interface CategoryData {
-  name: string;
-  value: number;
-  id?: string;
-  subcategories: Record<string, SubcategoryData>;
-}
-
-interface SubcategoryData {
-  name: string;
-  value: number;
-  id?: string;
-  parentValue?: number;
-}
-
-interface ChartData {
-  name: string;
-  value: number;
-  id?: string;
-  parentValue?: number;
-}
-
-interface PieChartLabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  value: number;
-  name: string;
-}
-
-interface TooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    payload: ChartData;
-  }>;
-}
-
 export function ExpensesByCategory({ className }: { className?: string }) {
   const { data, isLoading } = api.reports.getAll.useQuery();
-  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
-    null,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   const categoryData = React.useMemo(() => {
@@ -295,3 +239,41 @@ export function ExpensesByCategory({ className }: { className?: string }) {
 }
 
 export default ExpensesByCategory;
+
+interface CategoryData {
+  name: string;
+  value: number;
+  id?: string;
+  subcategories: Record<string, SubcategoryData>;
+}
+
+interface SubcategoryData {
+  name: string;
+  value: number;
+  id?: string;
+  parentValue?: number;
+}
+
+interface ChartData {
+  name: string;
+  value: number;
+  id?: string;
+  parentValue?: number;
+}
+
+interface PieChartLabelProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  value: number;
+  name: string;
+}
+
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: ChartData;
+  }>;
+}
