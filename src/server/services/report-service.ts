@@ -32,18 +32,30 @@ export class ReportService {
       orderBy: (transactions, { asc }) => asc(transactions.date),
     });
 
-    const categories = new Set<string>();
+    const categories = new Map<
+      string,
+      ReportFilter & { subcategories: ReportFilter[] }
+    >();
     const subcategories = new Set<string>();
     const recipients = new Set<string>();
     const paymentMethods = new Map<string, ReportFilter>();
 
     result.forEach((transaction) => {
-      if (transaction.category?.name) categories.add(transaction.category.name);
+      if (transaction.category?.name) {
+        categories.set(transaction.category.name, {
+          ...transaction.category,
+          subcategories: [],
+        });
+      }
+
       if (transaction.recipient?.name)
         recipients.add(transaction.recipient.name);
 
       if (transaction.subcategory?.name) {
         subcategories.add(transaction.subcategory.name);
+        categories.get(transaction.category!.name)?.subcategories.push({
+          ...transaction.subcategory,
+        });
       }
 
       if (transaction.paymentMethod?.name) {
@@ -59,7 +71,7 @@ export class ReportService {
         ...transaction,
         amount: parseFloat(transaction.amount),
       })),
-      categories: Array.from(categories),
+      categories: Array.from(categories.values()),
       subcategories: Array.from(subcategories),
       recipients: Array.from(recipients),
       paymentMethods: Array.from(paymentMethods.values()),
