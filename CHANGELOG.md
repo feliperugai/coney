@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.3] - 2024-12-30
+### :bug: Bug Fixes
+- [`8855ced`](https://github.com/feliperugai/coney/commit/8855ced5048476e59d98ade1ab535b888143e0c1) - add typing for CustomLegend component *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+
 ## [v0.1.2] - 2024-12-30
 ### :bug: Bug Fixes
 - [`743ac5a`](https://github.com/feliperugai/coney/commit/743ac5ace6613d834e6a8ff50b51ff44d4341893) - simplify tag formatting in release workflow for DockerHub deployment *(commit by [@feliperugai](https://github.com/feliperugai))*
@@ -27,3 +32,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.0]: https://github.com/feliperugai/coney/compare/v0.0.2...v0.1.0
 [v0.1.1]: https://github.com/feliperugai/coney/compare/v0.1.0...v0.1.1
 [v0.1.2]: https://github.com/feliperugai/coney/compare/v0.1.1...v0.1.2
+[v0.1.3]: https://github.com/feliperugai/coney/compare/v0.1.2...v0.1.3
