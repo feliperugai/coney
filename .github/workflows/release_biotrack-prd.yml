@@ -1,0 +1,78 @@
+name: "[CI] Build and deploy to Docker Hub"
+
+on:
+  push:
+    branches:
+      - release
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
+    outputs:
+      new-version: ${{ steps.version-bump.outputs.newTag }}
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+        with:
+          ref: ${{ github.ref }}
+
+      - name: "Automated Version Bump"
+        id: version-bump
+        uses: "phips28/gh-action-bump-version@master"
+        with:
+          tag-prefix: "v"
+          target-branch: "release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG.md
+        id: changelog
+        uses: Requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          excludeTypes: ci,docs,other
+          tag: ${{ steps.version-bump.outputs.newTag }}
+
+      - name: Commit CHANGELOG.md
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: release
+          commit_message: "docs: update CHANGELOG.md for ${{ steps.version-bump.outputs.newTag }}"
+          file_pattern: CHANGELOG.md
+
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          draft: false
+          name: ${{ steps.version-bump.outputs.newTag }}
+          tag: ${{ steps.version-bump.outputs.newTag }}
+          body: ${{ steps.changelog.outputs.changes }}
+          token: ${{ github.token }}
+
+      - name: "Checkout code after bump"
+        uses: "actions/checkout@v3"
+        with:
+          ref: "release"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags:
+            felrugai/coney:${{ steps.version-bump.outputs.newTag }}
+            felrugai/coney:latest
+          file: ./Dockerfile
