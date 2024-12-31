@@ -11,6 +11,7 @@ export function GoalsChart() {
   return data.goals.map((goal) => (
     <GoalProgressBar
       key={goal.id}
+      id={goal.id}
       label={goal.displayName}
       progress={goal.progress}
       startText={format(goal.totalSpent)} 

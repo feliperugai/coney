@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
+import { type ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 import { cn } from "~/lib/utils";
 
@@ -108,6 +109,7 @@ const ChartTooltipContent = React.forwardRef<
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean;
+      formatValue?: (value: ValueType) => string;
       hideIndicator?: boolean;
       indicator?: "line" | "dot" | "dashed";
       nameKey?: string;
@@ -119,6 +121,7 @@ const ChartTooltipContent = React.forwardRef<
       active,
       payload,
       className,
+      formatValue,
       indicator = "dot",
       hideLabel = false,
       hideIndicator = false,
@@ -241,7 +244,8 @@ const ChartTooltipContent = React.forwardRef<
                       </div>
                       {item.value && (
                         <span className="font-mono font-medium tabular-nums text-foreground">
-                          {item.value.toLocaleString()}
+                          {formatValue?.(item.value) ??
+                            item.value.toLocaleString()}
                         </span>
                       )}
                     </div>

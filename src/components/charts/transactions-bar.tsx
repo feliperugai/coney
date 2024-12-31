@@ -206,7 +206,7 @@ export default function TransactionsByDate({
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
+                return date.toLocaleDateString("pt-BR", {
                   month: "short",
                   day: "numeric",
                 });
@@ -216,13 +216,14 @@ export default function TransactionsByDate({
               content={
                 <ChartTooltipContent
                   className="w-[250px]"
+                  formatValue={(value) => format(value.toString())}
                   nameKey={
                     activeChart === ALL_METHODS
                       ? "total"
                       : `amounts.${activeChart}`
                   }
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(value).toLocaleDateString("pt-BR", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
