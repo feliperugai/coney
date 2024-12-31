@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.0] - 2024-12-31
+### :sparkles: New Features
+- [`87d3fc2`](https://github.com/feliperugai/coney/commit/87d3fc2002cb037bd879bd1d7a76cd9f0fba9634) - add totals to goals *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+### :bug: Bug Fixes
+- [`6e386bd`](https://github.com/feliperugai/coney/commit/6e386bd865d1ed065fc0231138320c2ceab04167) - update query logic in GoalService to use 'and' instead of 'or' for categoryId handling *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+### :wrench: Chores
+- [`bacd0c8`](https://github.com/feliperugai/coney/commit/bacd0c803e31fb7226e7e1a7c77b42a8283624fd) - add styles for dashboard *(commit by [@feliperugai](https://github.com/feliperugai))*
+- [`fe182ca`](https://github.com/feliperugai/coney/commit/fe182caeec57d36a0722277a665ddef0fe9aba4d) - add more animation to dashboard *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+
 ## [v0.3.1] - 2024-12-30
 ### :wrench: Chores
 - [`a41fc68`](https://github.com/feliperugai/coney/commit/a41fc688ca4587f2075c635768163842d906ab66) - update bun.lockb with latest dependencies *(commit by [@feliperugai](https://github.com/feliperugai))*
@@ -52,3 +64,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.2.0]: https://github.com/feliperugai/coney/compare/v0.1.4...v0.2.0
 [v0.3.0]: https://github.com/feliperugai/coney/compare/v0.2.0...v0.3.0
 [v0.3.1]: https://github.com/feliperugai/coney/compare/v0.3.0...v0.3.1
+[v0.4.0]: https://github.com/feliperugai/coney/compare/v0.3.1...v0.4.0
