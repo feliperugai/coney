@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.3.1] - 2024-12-30
+### :wrench: Chores
+- [`a41fc68`](https://github.com/feliperugai/coney/commit/a41fc688ca4587f2075c635768163842d906ab66) - update bun.lockb with latest dependencies *(commit by [@feliperugai](https://github.com/feliperugai))*
+
+
 ## [v0.3.0] - 2024-12-30
 ### :sparkles: New Features
 - [`b7f4b4d`](https://github.com/feliperugai/coney/commit/b7f4b4d418f01d95b77ab36b91310b52caf5aaf3) - add responsiviness to chart buttons *(commit by [@feliperugai](https://github.com/feliperugai))*
@@ -46,3 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.3]: https://github.com/feliperugai/coney/compare/v0.1.2...v0.1.3
 [v0.2.0]: https://github.com/feliperugai/coney/compare/v0.1.4...v0.2.0
 [v0.3.0]: https://github.com/feliperugai/coney/compare/v0.2.0...v0.3.0
+[v0.3.1]: https://github.com/feliperugai/coney/compare/v0.3.0...v0.3.1
