@@ -265,9 +265,6 @@ export default function TransactionsByDate({
 
         <Separator className="mb-4 mt-10" />
 
-        <CardHeader className="px-0">
-          <CardTitle>Metas</CardTitle>
-        </CardHeader>
         <GoalsChart />
       </CardContent>
     </Card>
