@@ -75,7 +75,7 @@ export class GoalService {
     return this.db.query.goals.findMany({
       where: and(
         eq(goals.userId, userId),
-        or(
+        and(
           categoryId
             ? eq(goals.categoryId, categoryId)
             : isNull(goals.categoryId),
