@@ -265,9 +265,6 @@ export default function TransactionsByDate({
 
         <Separator className="mb-4 mt-10" />
 
-        <CardHeader className="px-0">
-          <CardTitle>Metas</CardTitle>
-        </CardHeader>
         <GoalsChart />
       </CardContent>
     </Card>
@@ -276,7 +273,6 @@ export default function TransactionsByDate({
 
 // Componente customizado para a legenda
 const CustomLegend = (props: any) => {
-  console.log({ props });
   if (!props) return null;
 
   return (

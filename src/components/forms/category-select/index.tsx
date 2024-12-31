@@ -41,7 +41,7 @@ export function CategorySelect({
       form.setValue(subcategoryKey, undefined);
       return category.id;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "";
     }
   }
@@ -97,7 +97,7 @@ export function SubcategorySelect({
 
       return subcategory.id;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "";
     }
   }

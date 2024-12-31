@@ -15,7 +15,6 @@ export function VisualizationCell({
   };
 }) {
   const [loading, setLoading] = useState(!!data?.image);
-  console.log({ loading, state: !!data.image });
 
   if (data?.image) {
     return (

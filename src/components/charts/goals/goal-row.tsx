@@ -26,7 +26,7 @@ export const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
 }) => {
   return (
     <Link href="/metas" as={`/metas?id=${id}`}>
-      <div className="space-y-2 rounded-lg border border-border/50 p-2 shadow-sm transition-all hover:bg-sidebar-accent">
+      <div className="space-y-2 rounded-lg border border-border/50 p-2 shadow-sm transition-all hover:bg-sidebar-accent mb-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">{label}</span>
           <span className="text-sm font-medium">{progress.toFixed(1)}%</span>

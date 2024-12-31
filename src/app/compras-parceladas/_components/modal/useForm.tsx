@@ -65,7 +65,7 @@ export function useInstallmentPurchaseForm(
 
       return recipient.id;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -73,7 +73,7 @@ export function useInstallmentPurchaseForm(
     if (data.newRecipient) {
       data.recipientId = await createRecipient(data);
     }
-    console.log({ data });
+
     if (initialData) {
       updateInstallmentPurchase({ id: initialData.id, data });
     } else {
