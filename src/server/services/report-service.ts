@@ -16,8 +16,8 @@ export class ReportService {
         paymentMethod: {
           columns: { id: true, name: true, image: true, color: true },
         },
-        category: { columns: { id: true, name: true } },
-        subcategory: { columns: { id: true, name: true } },
+        category: { columns: { id: true, name: true, color: true } },
+        subcategory: { columns: { id: true, name: true, color: true } },
         recipient: {
           columns: { id: true, name: true, image: true, color: true },
         },

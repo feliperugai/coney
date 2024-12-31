@@ -16,7 +16,7 @@ export default function SortButton<T>({
   className,
 }: SortButtonProps<T>) {
   const isSorting = column.getIsSorted();
-  console.log({ label });
+
   const Icon = !isSorting
     ? ArrowUpDown
     : isSorting === "asc"

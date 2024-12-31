@@ -276,7 +276,6 @@ export default function TransactionsByDate({
 
 // Componente customizado para a legenda
 const CustomLegend = (props: any) => {
-  console.log({ props });
   if (!props) return null;
 
   return (

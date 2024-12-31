@@ -62,7 +62,7 @@ export function useTransactionForm(
 
       return recipient.id;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -70,7 +70,7 @@ export function useTransactionForm(
     if (data.newRecipient) {
       data.recipientId = await createRecipient(data);
     }
-    console.log({ data });
+
     if (initialData) {
       updateTransaction({ id: initialData.id, data });
     } else {

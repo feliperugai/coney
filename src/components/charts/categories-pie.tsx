@@ -29,9 +29,10 @@ export function ExpensesByCategory({ className }: { className?: string }) {
 
       if (!acc[categoryName]) {
         acc[categoryName] = {
+          id: transaction.category?.id,
+          color: transaction.category?.color,
           name: categoryName,
           value: 0,
-          id: transaction.category?.id,
           subcategories: {},
         };
       }
@@ -41,9 +42,10 @@ export function ExpensesByCategory({ className }: { className?: string }) {
       if (subcategoryName && transaction.subcategory?.id) {
         if (!acc[categoryName].subcategories[subcategoryName]) {
           acc[categoryName].subcategories[subcategoryName] = {
+            id: transaction.subcategory.id,
+            color: transaction.subcategory.color,
             name: subcategoryName,
             value: 0,
-            id: transaction.subcategory.id,
           };
         }
         acc[categoryName].subcategories[subcategoryName].value +=
@@ -141,11 +143,21 @@ export function ExpensesByCategory({ className }: { className?: string }) {
 
   const renderTooltipContent = ({ active, payload }: TooltipProps) => {
     if (!active || !payload?.length || !payload[0]?.payload) return null;
+
     const data = payload[0].payload;
+    const index = categoryData.findIndex((c) => c.id === data.id);
 
     return (
       <div className="rounded-lg border bg-background p-2 shadow-sm">
-        <p className="font-medium">{data.name}</p>
+        <div className="flex items-center gap-2 font-medium">
+          <div
+            className="size-4 rounded-md border"
+            style={{
+              backgroundColor: data.color ?? COLORS[index % COLORS.length],
+            }}
+          ></div>
+          {data.name}
+        </div>
         <p className="text-sm text-muted-foreground">
           {format(data.value)} ({((data.value / total) * 100).toFixed(1)}%)
         </p>
@@ -205,7 +217,7 @@ export function ExpensesByCategory({ className }: { className?: string }) {
                 {currentData.map((entry, index) => (
                   <Cell
                     key={entry.id ?? entry.name}
-                    fill={COLORS[index % COLORS.length]}
+                    fill={entry.color ?? COLORS[index % COLORS.length]}
                     className="stroke-background hover:opacity-90"
                     strokeWidth={2}
                     style={{ cursor: "pointer" }}
@@ -225,7 +237,10 @@ export function ExpensesByCategory({ className }: { className?: string }) {
             >
               <div
                 className="h-3 w-3 rounded-sm"
-                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                style={{
+                  backgroundColor:
+                    category.color ?? COLORS[index % COLORS.length],
+                }}
               />
               <span className="text-sm">
                 {category.name} ({((category.value / total) * 100).toFixed(1)}%)
@@ -241,23 +256,26 @@ export function ExpensesByCategory({ className }: { className?: string }) {
 export default ExpensesByCategory;
 
 interface CategoryData {
+  id?: string;
   name: string;
   value: number;
-  id?: string;
+  color?: string | null;
   subcategories: Record<string, SubcategoryData>;
 }
 
 interface SubcategoryData {
+  id?: string;
+  color?: string | null;
   name: string;
   value: number;
-  id?: string;
   parentValue?: number;
 }
 
 interface ChartData {
+  id?: string;
+  color?: string | null;
   name: string;
   value: number;
-  id?: string;
   parentValue?: number;
 }
 
