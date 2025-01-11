@@ -23,7 +23,7 @@ import { format } from "~/lib/currency";
 import { getAllDaysInMonth } from "~/lib/date";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { Separator } from "../ui/separator";
+
 import { GoalsChart } from "./goals/goal";
 
 const ALL_METHODS = "all";
@@ -123,151 +123,155 @@ export default function TransactionsByDate({
   };
 
   return (
-    <Card className={cn(className, "@container")}>
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Despesas variáveis</CardTitle>
-            </div>
-            <Toggle
-              aria-label="Mostrar todos os dias"
-              pressed={showAllDays}
-              onPressedChange={setShowAllDays}
-              className="ml-4"
-            >
-              {showAllDays ? (
-                <CalendarRange className="h-4 w-4" />
-              ) : (
-                <CalendarDays className="h-4 w-4" />
-              )}
-            </Toggle>
-          </div>
-        </div>
-        <div className="flex">
-          <button
-            data-active={activeChart === ALL_METHODS}
-            className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-4 py-3 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
-            onClick={() => setActiveChart(ALL_METHODS)}
-          >
-            <span className="text-[10px] text-muted-foreground">Total</span>
-            <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
-              {format(totals[ALL_METHODS] ?? 0)}
-            </span>
-          </button>
-          {data?.paymentMethods.map(({ image, name }) => (
-            <button
-              key={name}
-              data-active={activeChart === name}
-              className="relative z-30 flex flex-1 items-center gap-2 border-t px-4 py-3 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
-              onClick={() => setActiveChart(name)}
-            >
-              {image && (
-                <div className="size-6 flex-none @[886px]:size-7">
-                  <Image
-                    src={image}
-                    width={28}
-                    height={28}
-                    className="rounded-md"
-                    alt={"Visualização"}
-                  />
-                </div>
-              )}
-              <div className="flex flex-col justify-center">
-                <span className="text-[10px] text-muted-foreground">
-                  {name}
-                </span>
-                <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
-                  {format(totals[name] ?? 0)}
-                </span>
+    <div className={cn("flex flex-col gap-4", className)}>
+      <Card>
+        <CardContent className="px-2">
+          <GoalsChart />
+        </CardContent>
+      </Card>
+      <Card className={cn("@container")}>
+        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Despesas variáveis</CardTitle>
               </div>
-            </button>
-          ))}
-        </div>
-      </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <BarChart
-            data={groupedData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("pt-BR", {
-                  month: "short",
-                  day: "numeric",
-                });
-              }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[250px]"
-                  formatValue={(value) => format(value.toString())}
-                  nameKey={
-                    activeChart === ALL_METHODS
-                      ? "total"
-                      : `amounts.${activeChart}`
-                  }
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("pt-BR", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    });
-                  }}
-                />
-              }
-            />
-            {activeChart === ALL_METHODS
-              ? data.paymentMethods.map(({ name }) => (
-                  <Bar
-                    key={name}
-                    dataKey={`amounts.${name}`}
-                    name={name}
-                    stackId="a"
-                    fill={
-                      data.paymentMethods.find((m) => m.name === name)?.color ??
-                      `hsl(var(--chart-${data.paymentMethods.findIndex((m) => m.name === name) + 1}))`
-                    }
-                  />
-                ))
-              : activeChart && (
-                  <Bar
-                    dataKey={`amounts.${activeChart}`}
-                    name={activeChart}
-                    stackId="a"
-                    fill={
-                      data.paymentMethods.find((m) => m.name === activeChart)
-                        ?.color ??
-                      `hsl(var(--chart-${data.paymentMethods.findIndex((m) => m.name === activeChart) + 1}))`
-                    }
-                  />
+              <Toggle
+                aria-label="Mostrar todos os dias"
+                pressed={showAllDays}
+                onPressedChange={setShowAllDays}
+                className="ml-4"
+              >
+                {showAllDays ? (
+                  <CalendarRange className="h-4 w-4" />
+                ) : (
+                  <CalendarDays className="h-4 w-4" />
                 )}
-            {activeChart === ALL_METHODS && (
-              <Legend content={<CustomLegend />} />
-            )}
-          </BarChart>
-        </ChartContainer>
-
-        <Separator className="mb-4 mt-10" />
-
-        <GoalsChart />
-      </CardContent>
-    </Card>
+              </Toggle>
+            </div>
+          </div>
+          <div className="flex">
+            <button
+              data-active={activeChart === ALL_METHODS}
+              className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-4 py-3 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
+              onClick={() => setActiveChart(ALL_METHODS)}
+            >
+              <span className="text-[10px] text-muted-foreground">Total</span>
+              <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
+                {format(totals[ALL_METHODS] ?? 0)}
+              </span>
+            </button>
+            {data?.paymentMethods.map(({ image, name }) => (
+              <button
+                key={name}
+                data-active={activeChart === name}
+                className="relative z-30 flex flex-1 items-center gap-2 border-t px-4 py-3 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0"
+                onClick={() => setActiveChart(name)}
+              >
+                {image && (
+                  <div className="size-6 flex-none @[886px]:size-7">
+                    <Image
+                      src={image}
+                      width={28}
+                      height={28}
+                      className="rounded-md"
+                      alt={"Visualização"}
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col justify-center">
+                  <span className="text-[10px] text-muted-foreground">
+                    {name}
+                  </span>
+                  <span className="text-sm font-bold leading-none transition-all @[400px]:text-base @[600px]:text-lg @[886px]:text-xl @[950px]:text-2xl">
+                    {format(totals[name] ?? 0)}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 sm:p-6">
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
+          >
+            <BarChart
+              data={groupedData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value);
+                  return date.toLocaleDateString("pt-BR", {
+                    month: "short",
+                    day: "numeric",
+                  });
+                }}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-[250px]"
+                    formatValue={(value) => format(value.toString())}
+                    nameKey={
+                      activeChart === ALL_METHODS
+                        ? "total"
+                        : `amounts.${activeChart}`
+                    }
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("pt-BR", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+                    }}
+                  />
+                }
+              />
+              {activeChart === ALL_METHODS
+                ? data.paymentMethods.map(({ name }) => (
+                    <Bar
+                      key={name}
+                      dataKey={`amounts.${name}`}
+                      name={name}
+                      stackId="a"
+                      fill={
+                        data.paymentMethods.find((m) => m.name === name)
+                          ?.color ??
+                        `hsl(var(--chart-${data.paymentMethods.findIndex((m) => m.name === name) + 1}))`
+                      }
+                    />
+                  ))
+                : activeChart && (
+                    <Bar
+                      dataKey={`amounts.${activeChart}`}
+                      name={activeChart}
+                      stackId="a"
+                      fill={
+                        data.paymentMethods.find((m) => m.name === activeChart)
+                          ?.color ??
+                        `hsl(var(--chart-${data.paymentMethods.findIndex((m) => m.name === activeChart) + 1}))`
+                      }
+                    />
+                  )}
+              {activeChart === ALL_METHODS && (
+                <Legend content={<CustomLegend />} />
+              )}
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

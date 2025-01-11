@@ -104,6 +104,7 @@ export class ReportService {
       const relevantTransactions = transactions.filter((transaction) => {
         const matchesCategory =
           goal.categoryId && transaction.category?.id === goal.categoryId;
+
         const matchesSubcategory =
           goal.subcategoryId &&
           transaction.subcategory?.id === goal.subcategoryId;
