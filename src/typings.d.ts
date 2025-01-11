@@ -9,3 +9,8 @@ declare module "@tanstack/react-table" {
     className?: string;
   }
 }
+
+declare module "*.json" {
+  const value: any;
+  export default value;
+}
