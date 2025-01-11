@@ -1,3 +1,4 @@
+import { addDays } from "date-fns";
 import { z } from "zod";
 import { getEndOfMonth, getStartOfMonth } from "~/lib/date";
 import { ReportService } from "~/server/services/report-service";
@@ -18,7 +19,8 @@ export const reportsRouter = createTRPCRouter({
 
       const start = input?.startDate ?? getStartOfMonth();
       const end = input?.endDate ?? getEndOfMonth();
-
-      return service.getAll(start, end);
+      const startDate = addDays(start, -5);
+        console.log(startDate);
+      return service.getAll(startDate, end);
     }),
 });

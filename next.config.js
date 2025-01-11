@@ -9,20 +9,34 @@ const config = {
   output: "standalone",
   images: {
     remotePatterns: [
+      // {
+      //   protocol: "https",
+      //   hostname: "uploadthing.s3.amazonaws.com",
+      //   pathname: "**",
+      // },
+      // {
+      //   protocol: "https",
+      //   hostname: "uploadthing.com",
+      //   pathname: "**",
+      // },
+      // {
+      //   protocol: "https",
+      //   hostname: "utfs.io",
+      //   pathname: "**",
+      // },
+      // {
+      //   protocol: "https",
+      //   hostname: "utfs.sh",
+      //   pathname: "**",
+      // },
+      // {
+      //   protocol: "https",
+      //   hostname: "cdn.discordapp.com",
+      //   pathname: "**",
+      // },
       {
         protocol: "https",
-        hostname: "uploadthing.s3.amazonaws.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "utfs.io",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.discordapp.com",
-        pathname: "**",
+        hostname: "**",
       },
     ],
   },

@@ -55,13 +55,13 @@ export const recipientRouter = createTRPCRouter({
     .input(
       z
         .object({
-          limit: z.number().min(1).max(100).default(10),
+          limit: z.number().min(1).max(100),
           offset: z.number().min(0).default(0),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const { limit = 10, offset = 0 } = input ?? {};
+      const { limit, offset = 0 } = input ?? {};
       return ctx.db.query.recipients.findMany({
         limit,
         offset,
@@ -90,12 +90,12 @@ export const recipientRouter = createTRPCRouter({
     .input(
       z.object({
         categoryId: z.string().uuid(),
-        limit: z.number().min(1).max(100).default(10),
+        limit: z.number().min(1).max(100),
         offset: z.number().min(0).default(0),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { categoryId, limit = 10, offset = 0 } = input;
+      const { categoryId, limit, offset = 0 } = input;
       return ctx.db.query.recipients.findMany({
         where: eq(recipients.categoryId, categoryId),
         limit,
